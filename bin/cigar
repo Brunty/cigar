@@ -3,9 +3,6 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
-$results = (new \Brunty\Cigar\Checker)->check($domains);
-
 array_shift($argv);
 $help = isset($argv[0]) && $argv[0] === '--help';
 
@@ -26,6 +23,8 @@ HELP;
 
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 
+$domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
+$results = (new \Brunty\Cigar\Checker)->check($domains);
 $passed = (new \Brunty\Cigar\Outputter)->output($results, $quiet);
 
 if ( ! $passed) {
