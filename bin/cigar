@@ -7,6 +7,23 @@ $domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
 $results = (new \Brunty\Cigar\Checker)->check($domains);
 
 array_shift($argv);
+$help = isset($argv[0]) && $argv[0] === '--help';
+
+if($help) {
+    $content = <<<HELP
+
+\e[33mUsage:\e[0m
+  cigar [options]
+
+\e[33mOptions:\e[0m
+      --quiet                    Do not output any message
+
+
+HELP;
+    echo $content;
+    exit(0);
+}
+
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 
 $passed = (new \Brunty\Cigar\Outputter)->output($results, $quiet);
