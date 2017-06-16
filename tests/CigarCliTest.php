@@ -13,7 +13,7 @@ class CigarCliTest extends TestCase
      */
     public function it_passes_if_given_good_urls()
     {
-        $process = new Process('cd tests && cp .cigar.pass .cigar && ../bin/cigar');
+        $process = new Process('cd tests && cp stubs/.cigar.pass .cigar && ../bin/cigar');
         $process->run();
 
         self::assertEquals(0, $process->getExitCode());
@@ -24,7 +24,7 @@ class CigarCliTest extends TestCase
      */
     public function it_is_quiet_if_given_the_option()
     {
-        $process = new Process('cd tests && cp .cigar.pass .cigar && ../bin/cigar --quiet');
+        $process = new Process('cd tests && cp stubs/.cigar.pass .cigar && ../bin/cigar --quiet');
         $process->run();
 
         self::assertEquals('', $process->getOutput());
