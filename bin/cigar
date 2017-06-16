@@ -3,32 +3,15 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$parser = new \Brunty\Cigar\Parser;
-
-$domains = $parser->parse(".smoke");
-
+$domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
 $results = (new \Brunty\Cigar\Checker)->check($domains);
 
-$suitePassed = true;
-ob_start();
-foreach ($results as $result) {
-    $passed = $result->passed();
-    $colour = "\033[32m"; // green
-    $status = "✓";
+array_shift($argv);
+$quiet = isset($argv[0]) && $argv[0] === '--quiet';
 
-    if ( ! $passed) {
-        $suitePassed = false;
-        $colour = "\033[31m"; // red
-        $status = "✘";
-    }
-    echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] \033[0m" . PHP_EOL;
+$passed = (new \Brunty\Cigar\Outputter)->output($results, $quiet);
 
-    ob_flush();
-}
-
-ob_end_flush();
-
-if ( ! $suitePassed) {
+if ( ! $passed) {
     exit(1);
 }
 
