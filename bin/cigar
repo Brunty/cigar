@@ -16,7 +16,7 @@ if($help) {
   cigar [options]
 
 \e[33mOptions:\e[0m
-      --quiet                    Do not output any message
+      \e[32m--quiet\e[0m                    Do not output any message
 
 
 HELP;
