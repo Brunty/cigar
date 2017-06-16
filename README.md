@@ -1,5 +1,7 @@
 # Cigar
 
+[![Build Status](https://travis-ci.org/Brunty/cigar.svg?branch=master)](https://travis-ci.org/Brunty/cigar)
+
 A smoke testing tool inspired by [symm/vape](https://github.com/symm/vape)
 
 This is not ready for real use yet, I'm just playing around...
