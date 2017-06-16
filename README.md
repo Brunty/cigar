@@ -29,6 +29,20 @@ Then run `bin/cigar` to have it check each of the URLs return the status code ex
 ✓ http://httpbin.org/status/500 [500:500] 
 ```
 
+The format of the lines in the output is:
+
+```
+pass/fail url [expected_code:actual_code]
+```
+
 If all tests pass, the return code `$?` will be `0` - if any of them don't return the expected status code, the return code will be `1`
 
 If you wish to suppress the output of the test run, pass the `--quiet` option to the command: `bin/cigar --quiet`
+
+## Contributing
+
+This started as a small personal project.
+
+Although this project is small, openness and inclusivity are taken seriously. To that end a code of conduct (listed in the contributing guide) has been adopted.
+
+[Contributor Guide](CONTRIBUTING.md)
