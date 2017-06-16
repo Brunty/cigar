@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$parser = new \Brunty\Cigar\Parser;
+
+$domains = $parser->parse(".smoke");
+
+$results = (new \Brunty\Cigar\Checker)->check($domains);
+
+$suitePassed = true;
+ob_start();
+foreach ($results as $result) {
+    $passed = $result->passed();
+    $colour = "\033[32m"; // green
+    $status = "✓";
+
+    if ( ! $passed) {
+        $suitePassed = false;
+        $colour = "\033[31m"; // red
+        $status = "✘";
+    }
+    echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] \033[0m" . PHP_EOL;
+
+    ob_flush();
+}
+
+ob_end_flush();
+
+if ( ! $suitePassed) {
+    exit(1);
+}
+
+exit(0);

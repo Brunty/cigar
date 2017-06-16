@@ -1,0 +1,25 @@
+{
+    "name": "brunty/cigar",
+    "description": "Smoke testing tool written in PHP.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matt Brunt",
+            "email": "matt@mfyu.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Brunty\\Cigar\\": "src/"
+        }
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^6.2",
+        "symfony/process": "^3.3"
+    },
+    "bin": [
+        "bin/cigar"
+    ]
+}
