@@ -8,12 +8,12 @@ class Parser
     public function parse(string $filename)
     {
         $contents = file_get_contents($filename);
-        $lines = explode("\n", $contents);
+        $lines = preg_split('/[\r\n]+/', $contents);
         $domains = [];
 
         foreach ($lines as $line) {
             if(trim($line) !== '') {
-                [$url, $status] = explode(' ', $line);
+                [$url, $status] = preg_split('/[\s]+/', $line);
                 $domains[] = new Domain($url, $status);
             }
         }
