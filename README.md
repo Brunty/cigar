@@ -8,6 +8,12 @@ This is not ready for real use yet, I'm just playing around...
 
 The code is awful.
 
+## Installation
+
+Install via composer:
+
+`composer require brunty/cigar --dev`
+
 ## To use
 
 Create a `.cigar` file that contains a newline separated list with the URLs you want to check, followed by a space, followed by the expected status code:
