@@ -11,6 +11,11 @@ class Outputter
     const SYMBOL_PASSED = '✓';
     const SYMBOL_FAILED = '✘';
 
+    public static function writeErrorLine(string $message): void
+    {
+        echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
+    }
+
     public function output(array $results, bool $quiet = false): bool
     {
         $suitePassed = true;

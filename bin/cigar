@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use Brunty\Cigar\Outputter;
+
 error_reporting(0);
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -23,16 +25,21 @@ HELP;
     exit(0);
 }
 
+if( ! file_exists('.cigar')) {
+    Outputter::writeErrorLine('Could not find .cigar file');
+    exit(1);
+}
+
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 try {
     $domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
 } catch(\Throwable $e) {
-    echo \Brunty\Cigar\Outputter::CONSOLE_RED . "Unable to parse '.cigar' file." . \Brunty\Cigar\Outputter::CONSOLE_RESET . PHP_EOL;
+    Outputter::writeErrorLine('Unable to parse .cigar file');
     exit(1);
 }
 
 $results = (new \Brunty\Cigar\Checker)->check($domains);
-$passed = (new \Brunty\Cigar\Outputter)->output($results, $quiet);
+$passed = (new Outputter)->output($results, $quiet);
 
 if ( ! $passed) {
     exit(1);
