@@ -13,9 +13,9 @@ class Parser
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if($line !== '') {
+            if ($line !== '') {
                 [$url, $status] = preg_split('/[\s]+/', $line);
-                $domains[] = new Domain($url, $status);
+                $domains[] = new Domain(trim($url), (int) trim($status));
             }
         }
 
