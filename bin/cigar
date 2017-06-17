@@ -1,7 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+use Brunty\Cigar\Checker;
 use Brunty\Cigar\Outputter;
+use Brunty\Cigar\Parser;
 
 error_reporting(0);
 
@@ -32,14 +34,14 @@ if( ! file_exists('.cigar')) {
 
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 try {
-    $domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
+    $domains = (new Parser)->parse('.cigar');
 } catch(\Throwable $e) {
     Outputter::writeErrorLine('Unable to parse .cigar file');
     exit(1);
 }
 
-$results = (new \Brunty\Cigar\Checker)->check($domains);
-$passed = (new Outputter)->output($results, $quiet);
+$results = (new Checker)->check($domains);
+$passed = (new Outputter)->outputResults($results, $quiet);
 
 if ( ! $passed) {
     exit(1);

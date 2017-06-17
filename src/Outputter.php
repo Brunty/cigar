@@ -16,7 +16,7 @@ class Outputter
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function output(array $results, bool $quiet = false): bool
+    public function outputResults(array $results, bool $quiet = false): bool
     {
         $suitePassed = true;
         ob_start();
