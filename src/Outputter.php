@@ -19,14 +19,16 @@ class Outputter
     public function outputResults(array $results, bool $quiet = false): bool
     {
         $suitePassed = true;
+
         ob_start();
+
         foreach ($results as $result) {
             [$colour, $status, $suitePassed] = $this->getOutputAndReturn($result);
 
             if ( ! $quiet) {
                 $this->outputLine($colour, $status, $result);
+                ob_flush();
             }
-            ob_flush();
         }
 
         ob_end_flush();
