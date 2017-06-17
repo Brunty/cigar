@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+error_reporting(0);
+
 require __DIR__ . '/../vendor/autoload.php';
 
 array_shift($argv);
@@ -22,8 +24,13 @@ HELP;
 }
 
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
+try {
+    $domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
+} catch(\Throwable $e) {
+    echo \Brunty\Cigar\Outputter::CONSOLE_RED . "Unable to parse '.cigar' file." . \Brunty\Cigar\Outputter::CONSOLE_RESET . PHP_EOL;
+    exit(1);
+}
 
-$domains = (new \Brunty\Cigar\Parser)->parse('.cigar');
 $results = (new \Brunty\Cigar\Checker)->check($domains);
 $passed = (new \Brunty\Cigar\Outputter)->output($results, $quiet);
 
