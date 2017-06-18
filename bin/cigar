@@ -1,12 +1,26 @@
 #!/usr/bin/env php
 <?php
 
+error_reporting(0);
+
+$autoloadLocations = [
+    __DIR__ . '/../../../autoload.php',
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/vendor/autoload.php'
+];
+
+foreach ($autoloadLocations as $autoloadFile) {
+    if (file_exists($autoloadFile)) {
+        require $autoloadFile;
+        break;
+    }
+}
+
 use Brunty\Cigar\AsyncChecker;
-use Brunty\Cigar\Checker;
 use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 
-error_reporting(0);
 
 require __DIR__ . '/../vendor/autoload.php';
 
