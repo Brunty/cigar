@@ -21,9 +21,6 @@ use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 
-
-require __DIR__ . '/../vendor/autoload.php';
-
 array_shift($argv);
 $help = isset($argv[0]) && $argv[0] === '--help';
 
