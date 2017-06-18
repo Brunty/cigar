@@ -16,7 +16,8 @@ class ParserTest extends TestCase
     {
         $structure = [
             '.cigar' => 'http://httpbin.org/status/418    418
-                         http://httpbin.org/status/200	200'
+                         http://httpbin.org/status/200	200
+                         http://httpbin.org/status/418    418    "teapot"'
         ];
         $root = vfsStream::setup('root', null, $structure);
 
@@ -25,6 +26,7 @@ class ParserTest extends TestCase
         $expected = [
             new Domain('http://httpbin.org/status/418', 418),
             new Domain('http://httpbin.org/status/200', 200),
+            new Domain('http://httpbin.org/status/418', 418, 'teapot'),
         ];
 
         self::assertEquals($expected, $results);

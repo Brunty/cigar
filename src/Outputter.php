@@ -53,6 +53,6 @@ class Outputter
 
     private function outputLine(string $colour, string $status, Result $result): void
     {
-        echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] " . self::CONSOLE_RESET . PHP_EOL;
+        echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] {$result->getDomain()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 }

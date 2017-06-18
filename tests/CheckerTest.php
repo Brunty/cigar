@@ -4,9 +4,7 @@ namespace Brunty\Cigar\Tests;
 
 use Brunty\Cigar\Checker;
 use Brunty\Cigar\Domain;
-use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 class CheckerTest extends TestCase

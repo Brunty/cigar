@@ -5,6 +5,7 @@ namespace Brunty\Cigar;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Response;
 
 class AsyncChecker
 {
@@ -36,7 +37,8 @@ class AsyncChecker
         foreach ($domains as $domain) {
             $key = $domain->getUrl();
             if ($results[$key]) {
-                $output[] = new Result($domain, (int) $results[$key]->getStatusCode());
+                $content = $domain->getContent() !== null ? $results[$key]->getBody()->getContents() : null;
+                $output[] = new Result($domain, (int) $results[$key]->getStatusCode(), $content);
             } else {
                 $output[] = new Result($domain, (int) 0);
             }

@@ -16,10 +16,10 @@ Install via composer:
 
 ## To use
 
-Create a `.cigar` file that contains a newline separated list with the URLs you want to check, followed by a space, followed by the expected status code:
+Create a `.cigar` file that contains a newline separated list with the URLs you want to check, followed by a space, followed by the expected status code and optionally, a quoted string of content you want to see within the response body.
 
 ```
-http://httpbin.org/status/418 418
+http://httpbin.org/status/418 418 "teapot"
 http://httpbin.org/status/200 200
 http://httpbin.org/status/304 304
 http://httpbin.org/status/500 500
