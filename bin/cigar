@@ -39,8 +39,8 @@ HELP;
     exit(0);
 }
 
-if( ! file_exists('.cigar')) {
-    Outputter::writeErrorLine('Could not find .cigar file');
+if( ! file_exists('.cigar.json')) {
+    Outputter::writeErrorLine('Could not find .cigar.json file');
     exit(1);
 }
 
