@@ -16,7 +16,7 @@ Install via composer:
 
 ## To use
 
-Create a `.cigar.json` file that contains a newline separated list with the URLs you want to check, followed by a space, followed by the expected status code and optionally, a quoted string of content you want to see within the response body.
+Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status` and (optional) `content` to check.
 
 ```
 [
