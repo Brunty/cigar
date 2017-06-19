@@ -46,9 +46,9 @@ if( ! file_exists('.cigar')) {
 
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 try {
-    $domains = (new Parser)->parse('.cigar');
+    $domains = (new Parser)->parse('.cigar.json');
 } catch(\Throwable $e) {
-    Outputter::writeErrorLine('Unable to parse .cigar file');
+    Outputter::writeErrorLine('Unable to parse .cigar.json file');
     exit(1);
 }
 

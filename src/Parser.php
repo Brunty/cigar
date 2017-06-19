@@ -5,25 +5,16 @@ namespace Brunty\Cigar;
 class Parser
 {
 
-    public function parse(string $filename)
+    public function parse(string $filename): array
     {
-        $contents = file_get_contents($filename);
-        $lines = preg_split('/[\r\n]+/', $contents);
-        $domains = [];
+        $urls = json_decode(file_get_contents($filename), true);
 
-        foreach ($lines as $line) {
-            $line = trim($line);
-            if ($line !== '') {
-                [$url, $status, $content] = preg_split('/[\s]+/', $line);
-
-                if ($content !== null) {
-                    $content = trim($content, '"');
-                }
-
-                $domains[] = new Domain($url, $status, $content);
-            }
+        if($urls === null) {
+            throw new \ParseError('Could not parse ' . $filename);
         }
 
-        return $domains;
+        return array_map(function($value) {
+            return new Domain($value['url'], $value['status'], $value['content'] ?? null);
+        }, $urls);
     }
 }
