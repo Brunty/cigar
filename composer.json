@@ -27,7 +27,8 @@
     "require-dev": {
         "symfony/process": "^3.3",
         "mikey179/vfsStream": "^1.6",
-        "kahlan/kahlan": "dev-dev"
+        "kahlan/kahlan": "dev-dev",
+        "satooshi/php-coveralls": "^1.0"
     },
     "bin": [
         "bin/cigar"
