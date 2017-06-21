@@ -1,6 +1,6 @@
 # Cigar
 
-[![Build Status](https://travis-ci.org/Brunty/cigar.svg?branch=master)](https://travis-ci.org/Brunty/cigar)
+[![Build Status](https://travis-ci.org/Brunty/cigar.svg?branch=master)](https://travis-ci.org/Brunty/cigar) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f/mini.png)](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f)
 
 A smoke testing tool inspired by [symm/vape](https://github.com/symm/vape)
 

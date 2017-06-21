@@ -3,9 +3,7 @@
 namespace Brunty\Cigar;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Psr7\Response;
 
 class AsyncChecker
 {
