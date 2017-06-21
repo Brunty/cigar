@@ -4,10 +4,6 @@
 
 A smoke testing tool inspired by [symm/vape](https://github.com/symm/vape)
 
-This is not ready for real use yet, I'm just playing around...
-
-The code is awful.
-
 ## Installation
 
 Install via composer:
