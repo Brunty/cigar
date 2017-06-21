@@ -40,10 +40,10 @@ Create a `.cigar.json` file that contains an array of json objects specifying th
 ]
 ```
 
-Then run `bin/cigar` to have it check each of the URLs return the status code expected.
+Then run `vendor/bin/cigar` to have it check each of the URLs return the status code expected.
 
 ```
-> bin/cigar                                           
+> vendor/bin/cigar                                           
 ✓ http://httpbin.org/status/418 [418:418] 
 ✓ http://httpbin.org/status/200 [200:200] 
 ✓ http://httpbin.org/status/304 [304:304] 
@@ -58,7 +58,7 @@ pass/fail url [expected_code:actual_code] "optional text"
 
 If all tests pass, the return code `$?` will be `0` - if any of them don't return the expected status code, the return code will be `1`
 
-If you wish to suppress the output of the test run, pass the `--quiet` option to the command: `bin/cigar --quiet`
+If you wish to suppress the output of the test run, pass the `--quiet` option to the command: `vendor/bin/cigar --quiet`
 
 ## Contributing
 
