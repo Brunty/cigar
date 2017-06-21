@@ -39,16 +39,16 @@ HELP;
     exit(0);
 }
 
-if( ! file_exists('.cigar')) {
-    Outputter::writeErrorLine('Could not find .cigar file');
+if( ! file_exists('.cigar.json')) {
+    Outputter::writeErrorLine('Could not find .cigar.json file');
     exit(1);
 }
 
 $quiet = isset($argv[0]) && $argv[0] === '--quiet';
 try {
-    $domains = (new Parser)->parse('.cigar');
+    $domains = (new Parser)->parse('.cigar.json');
 } catch(\Throwable $e) {
-    Outputter::writeErrorLine('Unable to parse .cigar file');
+    Outputter::writeErrorLine('Unable to parse .cigar.json file');
     exit(1);
 }
 

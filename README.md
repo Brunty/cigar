@@ -16,13 +16,28 @@ Install via composer:
 
 ## To use
 
-Create a `.cigar` file that contains a newline separated list with the URLs you want to check, followed by a space, followed by the expected status code:
+Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status` and (optional) `content` to check.
 
 ```
-http://httpbin.org/status/418 418
-http://httpbin.org/status/200 200
-http://httpbin.org/status/304 304
-http://httpbin.org/status/500 500
+[
+  {
+    "url": "http://httpbin.org/status/418",
+    "status": 418,
+    "content": "teapot"
+  },
+  {
+    "url": "http://httpbin.org/status/200",
+    "status": 200
+  },
+  {
+    "url": "http://httpbin.org/status/304",
+    "status": 304
+  },
+  {
+    "url": "http://httpbin.org/status/500",
+    "status": 500
+  }
+]
 ```
 
 Then run `bin/cigar` to have it check each of the URLs return the status code expected.
@@ -38,7 +53,7 @@ Then run `bin/cigar` to have it check each of the URLs return the status code ex
 The format of the lines in the output is:
 
 ```
-pass/fail url [expected_code:actual_code]
+pass/fail url [expected_code:actual_code] "optional text"
 ```
 
 If all tests pass, the return code `$?` will be `0` - if any of them don't return the expected status code, the return code will be `1`

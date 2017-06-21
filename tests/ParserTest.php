@@ -15,16 +15,31 @@ class ParserTest extends TestCase
     public function it_parses_a_file_that_is_correctly_formatted()
     {
         $structure = [
-            '.cigar' => 'http://httpbin.org/status/418    418
-                         http://httpbin.org/status/200	200'
+            '.cigar.json' => '[
+  {
+    "url": "http://httpbin.org/status/418",
+    "status": 418
+  },
+  {
+    "url": "http://httpbin.org/status/200",
+    "status": 200
+  },
+  {
+    "url": "http://httpbin.org/status/418",
+    "status": 418,
+    "content": "teapot"
+  }
+]
+'
         ];
         $root = vfsStream::setup('root', null, $structure);
 
-        $results = (new Parser)->parse('vfs://root/.cigar');
+        $results = (new Parser)->parse('vfs://root/.cigar.json');
 
         $expected = [
             new Domain('http://httpbin.org/status/418', 418),
             new Domain('http://httpbin.org/status/200', 200),
+            new Domain('http://httpbin.org/status/418', 418, 'teapot'),
         ];
 
         self::assertEquals($expected, $results);
@@ -35,12 +50,12 @@ class ParserTest extends TestCase
      */
     public function it_lets_errors_be_thrown_on_parsing_a_file()
     {
-        $this->expectException(\Throwable::class);
+        $this->expectException(\ParseError::class);
         $structure = [
-            '.cigar' => 'http://httpbin.org/status/418'
+            '.cigar.json' => 'http://httpbin.org/status/418'
         ];
         $root = vfsStream::setup('root', null, $structure);
 
-        $results = (new Parser)->parse('vfs://root/.cigar');
+        $results = (new Parser)->parse('vfs://root/.cigar.json');
     }
 }
