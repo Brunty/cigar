@@ -59,7 +59,7 @@ OUTPUT;
             (new Outputter)->outputStats($passedResults, $results, 1.0);
         };
 
-        $output = PHP_EOL . "[\033[32m2/2\033[0m] in 1.5s" . PHP_EOL . PHP_EOL;
+        $output = PHP_EOL . "[\033[32m2/2\033[0m] passed in 1.5s" . PHP_EOL . PHP_EOL;
 
         expect($fn)->toEcho($output);
     });
@@ -80,7 +80,7 @@ OUTPUT;
             (new Outputter)->outputStats($passedResults, $results, 1.0);
         };
 
-        $output = PHP_EOL . "[\033[31m1/2\033[0m] in 1.5s" . PHP_EOL . PHP_EOL;
+        $output = PHP_EOL . "[\033[31m1/2\033[0m] passed in 1.5s" . PHP_EOL . PHP_EOL;
 
         expect($fn)->toEcho($output);
     });

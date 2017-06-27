@@ -84,7 +84,7 @@ class Outputter
         }
 
         if ( ! $this->isQuiet) {
-            echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] in {$timeDiff}s" . PHP_EOL . PHP_EOL;
+            echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] passed in {$timeDiff}s" . PHP_EOL . PHP_EOL;
         }
     }
 }
