@@ -39,9 +39,44 @@ OUTPUT;
         ];
 
         $fn = function() use ($results) {
-            (new Outputter)->outputResults($results, true);
+            (new Outputter(true))->outputResults($results);
         };
 
         expect($fn)->toEcho('');
+    });
+
+    it('outputs the stats of the execution with multiple results', function() {
+        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $results = [
+            new \Brunty\Cigar\Result($domain, 418, 'teapot'),
+            new \Brunty\Cigar\Result($domain, 419),
+        ];
+
+        allow('microtime')->toBeCalled()->andReturn(2.5);
+
+        $fn = function() use ($results) {
+            (new Outputter)->outputStats(true, $results, 1.0);
+        };
+
+        $output = PHP_EOL . 'Checked 2 URLs in 1.5s' . PHP_EOL . PHP_EOL;
+
+        expect($fn)->toEcho($output);
+    });
+
+    it('outputs the stats of the execution with a single result', function() {
+        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $results = [
+            new \Brunty\Cigar\Result($domain, 418, 'teapot')
+        ];
+
+        allow('microtime')->toBeCalled()->andReturn(2.5);
+
+        $fn = function() use ($results) {
+            (new Outputter)->outputStats(true, $results, 1.0);
+        };
+
+        $output = PHP_EOL . 'Checked 1 URL in 1.5s' . PHP_EOL . PHP_EOL;
+
+        expect($fn)->toEcho($output);
     });
 });

@@ -11,12 +11,22 @@ class Outputter
     const SYMBOL_PASSED = '✓';
     const SYMBOL_FAILED = '✘';
 
+    /**
+     * @var bool
+     */
+    private $isQuiet;
+
+    public function __construct(bool $isQuiet = false)
+    {
+        $this->isQuiet = $isQuiet;
+    }
+
     public static function writeErrorLine(string $message): void
     {
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputResults(array $results, bool $quiet = false): bool
+    public function outputResults(array $results): bool
     {
         $suitePassed = true;
 
@@ -25,7 +35,7 @@ class Outputter
         foreach ($results as $result) {
             [$colour, $status, $suitePassed] = $this->getOutputAndReturn($result);
 
-            if ( ! $quiet) {
+            if ( ! $this->isQuiet) {
                 $this->outputLine($colour, $status, $result);
                 ob_flush();
             }
@@ -54,5 +64,17 @@ class Outputter
     private function outputLine(string $colour, string $status, Result $result): void
     {
         echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] {$result->getDomain()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
+    }
+
+    public function outputStats(bool $passed, array $results, float $startTime): void
+    {
+        $numberOfResults = count($results);
+        $end = microtime(true);
+        $timeDiff = round($end - $startTime, 3);
+        $plural = $numberOfResults === 1 ? '' : 's';
+
+        if ( ! $this->isQuiet) {
+            echo PHP_EOL . "Checked {$numberOfResults} URL{$plural} in {$timeDiff}s" . PHP_EOL . PHP_EOL;
+        }
     }
 }

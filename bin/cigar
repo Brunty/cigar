@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+define('CIGAR_VERSION', '1.1');
+$start = microtime(true);
+
 error_reporting(0);
 
 $autoloadLocations = [
@@ -22,19 +25,47 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 
 array_shift($argv);
-$help = isset($argv[0]) && $argv[0] === '--help';
+$help = in_array('--help', $argv, true);
 
 if($help) {
     $content = <<<HELP
 
-\e[33mUsage:\e[0m
+\033[33mUsage:\033[0m
   cigar [options]
 
-\e[33mOptions:\e[0m
-      \e[32m--quiet\e[0m                    Do not output any message
+\033[33mOptions:\033[0m
+      \033[32m--quiet\033[0m                    Do not output any message
+      \033[32m--version\033[0m                  Print the version of Cigar 
 
+Created by Matt Brunt
+E: matt@mfyu.co.uk
+T: twitter.com/Brunty
+G: github.com/brunty/cigar
 
 HELP;
+    echo $content;
+    exit(0);
+}
+
+$version = in_array('--version', $argv, true);
+
+if($version) {
+    $version = CIGAR_VERSION;
+    $content = <<<VERSION
+  ____ ___ ____    _    ____  
+ / ___|_ _/ ___|  / \  |  _ \ 
+| |    | | |  _  / _ \ | |_) |
+| |___ | | |_| |/ ___ \|  _ < 
+ \____|___\____/_/   \_\_| \_\
+
+\033[0;90;49mThe simple smoke testing tool.\033[0m
+ 
+Version \033[36m{$version}\033[0m
+
+For additional help use \033[36m--help\033[0m
+
+
+VERSION;
     echo $content;
     exit(0);
 }
@@ -44,7 +75,8 @@ if( ! file_exists('.cigar.json')) {
     exit(1);
 }
 
-$quiet = isset($argv[0]) && $argv[0] === '--quiet';
+$quiet = in_array('--quiet', $argv, true);
+
 try {
     $domains = (new Parser)->parse('.cigar.json');
 } catch(\Throwable $e) {
@@ -53,7 +85,9 @@ try {
 }
 
 $results = (new AsyncChecker())->check($domains);
-$passed = (new Outputter)->outputResults($results, $quiet);
+$outputter = new Outputter($quiet);
+$passed = $outputter->outputResults($results);
+$outputter->outputStats($passed, $results, $start);
 
 if ( ! $passed) {
     exit(1);
