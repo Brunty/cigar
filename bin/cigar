@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.1');
+define('CIGAR_VERSION', '1.2');
 $start = microtime(true);
 
 error_reporting(0);
@@ -86,10 +86,11 @@ try {
 
 $results = (new AsyncChecker())->check($domains);
 $outputter = new Outputter($quiet);
-$passed = $outputter->outputResults($results);
-$outputter->outputStats($passed, $results, $start);
+$passedResults = $outputter->outputResults($results);
 
-if ( ! $passed) {
+$outputter->outputStats($passedResults, $results, $start);
+
+if ( count($passedResults) !== count($results)) {
     exit(1);
 }
 

@@ -45,37 +45,42 @@ OUTPUT;
         expect($fn)->toEcho('');
     });
 
-    it('outputs the stats of the execution with multiple results', function() {
+    it('outputs the stats of the execution if all results have passed', function() {
         $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
         $results = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot'),
             new \Brunty\Cigar\Result($domain, 419),
         ];
+        $passedResults = $results;
 
         allow('microtime')->toBeCalled()->andReturn(2.5);
 
-        $fn = function() use ($results) {
-            (new Outputter)->outputStats(true, $results, 1.0);
+        $fn = function() use ($results, $passedResults) {
+            (new Outputter)->outputStats($passedResults, $results, 1.0);
         };
 
-        $output = PHP_EOL . 'Checked 2 URLs in 1.5s' . PHP_EOL . PHP_EOL;
+        $output = PHP_EOL . "[\033[32m2/2\033[0m] in 1.5s" . PHP_EOL . PHP_EOL;
 
         expect($fn)->toEcho($output);
     });
 
-    it('outputs the stats of the execution with a single result', function() {
+    it('outputs the stats of the execution if some URLs have failed', function() {
         $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
         $results = [
+            new \Brunty\Cigar\Result($domain, 418, 'teapot'),
+            new \Brunty\Cigar\Result($domain, 419),
+        ];
+        $passedResults = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot')
         ];
 
         allow('microtime')->toBeCalled()->andReturn(2.5);
 
-        $fn = function() use ($results) {
-            (new Outputter)->outputStats(true, $results, 1.0);
+        $fn = function() use ($results, $passedResults) {
+            (new Outputter)->outputStats($passedResults, $results, 1.0);
         };
 
-        $output = PHP_EOL . 'Checked 1 URL in 1.5s' . PHP_EOL . PHP_EOL;
+        $output = PHP_EOL . "[\033[31m1/2\033[0m] in 1.5s" . PHP_EOL . PHP_EOL;
 
         expect($fn)->toEcho($output);
     });

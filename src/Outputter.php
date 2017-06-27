@@ -26,14 +26,18 @@ class Outputter
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputResults(array $results): bool
+    public function outputResults(array $results): array
     {
-        $suitePassed = true;
+        $passedResults = [];
 
         ob_start();
 
         foreach ($results as $result) {
-            [$colour, $status, $suitePassed] = $this->getOutputAndReturn($result);
+            [$colour, $status, $passed] = $this->getOutputAndReturn($result);
+
+            if ($passed) {
+                $passedResults[] = $result;
+            }
 
             if ( ! $this->isQuiet) {
                 $this->outputLine($colour, $status, $result);
@@ -43,13 +47,12 @@ class Outputter
 
         ob_end_flush();
 
-        return $suitePassed;
+        return $passedResults;
     }
 
     private function getOutputAndReturn(Result $result): array
     {
         $passed = $result->passed();
-        $suitePassed = $passed;
         $colour = self::CONSOLE_GREEN;
         $status = self::SYMBOL_PASSED;
 
@@ -58,7 +61,7 @@ class Outputter
             $status = self::SYMBOL_FAILED;
         }
 
-        return [$colour, $status, $suitePassed];
+        return [$colour, $status, $passed];
     }
 
     private function outputLine(string $colour, string $status, Result $result): void
@@ -66,15 +69,22 @@ class Outputter
         echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] {$result->getDomain()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputStats(bool $passed, array $results, float $startTime): void
+    public function outputStats(array $passedResults, array $results, float $startTime): void
     {
         $numberOfResults = count($results);
+        $numberOfPassedResults = count($passedResults);
         $end = microtime(true);
         $timeDiff = round($end - $startTime, 3);
-        $plural = $numberOfResults === 1 ? '' : 's';
+        $passed = $numberOfPassedResults === $numberOfResults;
+        $color = self::CONSOLE_GREEN;
+        $reset = self::CONSOLE_RESET;
+
+        if ( ! $passed) {
+            $color = self::CONSOLE_RED;
+        }
 
         if ( ! $this->isQuiet) {
-            echo PHP_EOL . "Checked {$numberOfResults} URL{$plural} in {$timeDiff}s" . PHP_EOL . PHP_EOL;
+            echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] in {$timeDiff}s" . PHP_EOL . PHP_EOL;
         }
     }
 }
