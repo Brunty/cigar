@@ -54,7 +54,19 @@ pass/fail url [expected_code:actual_code] optional_text
 
 If all tests pass, the return code `$?` will be `0` - if any of them don't return the expected status code, the return code will be `1`
 
+### Quiet test mode
+
 If you wish to suppress the output of the test run, pass the `--quiet` option to the command: `vendor/bin/cigar --quiet`
+
+### Alternative configuration files
+
+If you wish to use an alternative configuration file, use the `vendor/bin/cigar -c file.json` or `vendor/bin/cigar --config=file.json` options when running the command.
+
+### Command help & command version
+
+If you want to see all the available options for Cigar, use the command: `vendor/bin/cigar --help`
+
+If you wish to see what version of Cigar you're using, use the command: `vendor/bin/cigar --version`
 
 ## Contributing
 

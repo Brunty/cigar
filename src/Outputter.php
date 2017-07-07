@@ -2,6 +2,8 @@
 
 namespace Brunty\Cigar;
 
+use function Sodium\crypto_box_publickey_from_secretkey;
+
 class Outputter
 {
     const CONSOLE_GREEN = "\033[32m";
@@ -21,36 +23,33 @@ class Outputter
         $this->isQuiet = $isQuiet;
     }
 
-    public static function writeErrorLine(string $message): void
+    public function writeErrorLine(string $message): void
     {
+        if ($this->isQuiet) {
+            return;
+        }
+
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputResults(array $results): array
+    public function outputResults(array $results): void
     {
-        $passedResults = [];
+        if ($this->isQuiet) {
+            return;
+        }
 
         ob_start();
 
         foreach ($results as $result) {
-            [$colour, $status, $passed] = $this->getOutputAndReturn($result);
-
-            if ($passed) {
-                $passedResults[] = $result;
-            }
-
-            if ( ! $this->isQuiet) {
-                $this->outputLine($colour, $status, $result);
-                ob_flush();
-            }
+            [$colour, $status] = $this->getColourAndStatus($result);
+            $this->outputLine($colour, $status, $result);
+            ob_flush();
         }
 
         ob_end_flush();
-
-        return $passedResults;
     }
 
-    private function getOutputAndReturn(Result $result): array
+    private function getColourAndStatus(Result $result): array
     {
         $passed = $result->passed();
         $colour = self::CONSOLE_GREEN;
@@ -61,7 +60,7 @@ class Outputter
             $status = self::SYMBOL_FAILED;
         }
 
-        return [$colour, $status, $passed];
+        return [$colour, $status];
     }
 
     private function outputLine(string $colour, string $status, Result $result): void

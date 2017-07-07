@@ -1,7 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.2.1');
+$options = getopt('c:', ['version', 'help', 'quiet', 'config:']);
+
+define('CIGAR_VERSION', '1.3.0');
 $start = microtime(true);
 
 error_reporting(0);
@@ -23,9 +25,9 @@ foreach ($autoloadLocations as $autoloadFile) {
 use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
+use Brunty\Cigar\Result;
 
-array_shift($argv);
-$help = in_array('--help', $argv, true);
+$help = isset($options['help']);
 
 if($help) {
     $content = <<<HELP
@@ -34,8 +36,9 @@ if($help) {
   cigar [options]
 
 \033[33mOptions:\033[0m
-      \033[32m--quiet\033[0m                    Do not output any message
-      \033[32m--version\033[0m                  Print the version of Cigar 
+      \033[32m-c file.json, --config=file.json\033[0m   Use the specified config file instead of the default .cigar.json file 
+      \033[32m--quiet\033[0m                            Do not output any message
+      \033[32m--version\033[0m                          Print the version of Cigar 
 
 Created by Matt Brunt
 E: matt@mfyu.co.uk
@@ -47,7 +50,7 @@ HELP;
     exit(0);
 }
 
-$version = in_array('--version', $argv, true);
+$version = isset($options['version']);
 
 if($version) {
     $version = CIGAR_VERSION;
@@ -70,23 +73,29 @@ VERSION;
     exit(0);
 }
 
-if( ! file_exists('.cigar.json')) {
-    Outputter::writeErrorLine('Could not find .cigar.json file');
+$quiet = isset($options['quiet']);
+$outputter = new Outputter($quiet);
+
+$file = $options['config'] ?? '.cigar.json';
+$file = $options['c'] ?? $file;
+
+if( ! file_exists($file)) {
+    $outputter->writeErrorLine('Could not find configuration file: ' . $file);
     exit(1);
 }
 
-$quiet = in_array('--quiet', $argv, true);
-
 try {
-    $domains = (new Parser)->parse('.cigar.json');
+    $domains = (new Parser)->parse($file);
 } catch(\Throwable $e) {
-    Outputter::writeErrorLine('Unable to parse .cigar.json file');
+    $outputter->writeErrorLine('Unable to parse .cigar.json file');
     exit(1);
 }
 
 $results = (new AsyncChecker())->check($domains);
-$outputter = new Outputter($quiet);
-$passedResults = $outputter->outputResults($results);
+$passedResults = array_map(function(Result $result) {
+    return $result->passed();
+}, $results);
+$outputter->outputResults($results);
 
 $outputter->outputStats($passedResults, $results, $start);
 

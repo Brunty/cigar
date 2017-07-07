@@ -5,10 +5,18 @@ use Brunty\Cigar\Outputter;
 describe('Outputter', function() {
     it('outputs an error line', function() {
         $fn = function () {
-            Outputter::writeErrorLine('Error message');
+            (new Outputter)->writeErrorLine('Error message');
         };
 
         expect($fn)->toEcho("\033[31mError message\033[0m\n");
+    });
+
+    it('does not output an error line when run quietly', function() {
+        $fn = function () {
+            (new Outputter(true))->writeErrorLine('Error message');
+        };
+
+        expect($fn)->toEcho('');
     });
 
     it('outputs results', function() {
