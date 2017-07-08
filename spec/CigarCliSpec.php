@@ -26,7 +26,7 @@ describe('Cigar CLI Tool', function() {
     });
 
     it('fails if given bad URLs to check', function() {
-        $process = new Process('cd spec && cp .cigar.fail.json .cigar.json && ../bin/cigar');
+        $process = new Process('cd spec && cp stubs/.cigar.fail.json .cigar.json && ../bin/cigar');
         $process->run();
 
         expect($process->getExitCode())->toBe(1);
