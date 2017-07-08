@@ -92,9 +92,9 @@ try {
 }
 
 $results = (new AsyncChecker())->check($domains);
-$passedResults = array_map(function(Result $result) {
+$passedResults = array_filter($results, function(Result $result) {
     return $result->hasPassed();
-}, $results);
+});
 $outputter->outputResults($results);
 
 $outputter->outputStats($passedResults, $results, $start);
