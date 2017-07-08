@@ -2,8 +2,6 @@
 
 namespace Brunty\Cigar;
 
-use function Sodium\crypto_box_publickey_from_secretkey;
-
 class Outputter
 {
     const CONSOLE_GREEN = "\033[32m";
@@ -34,10 +32,6 @@ class Outputter
 
     public function outputResults(array $results): void
     {
-        if ($this->isQuiet) {
-            return;
-        }
-
         ob_start();
 
         foreach ($results as $result) {
@@ -51,7 +45,7 @@ class Outputter
 
     private function getColourAndStatus(Result $result): array
     {
-        $passed = $result->passed();
+        $passed = $result->hasPassed();
         $colour = self::CONSOLE_GREEN;
         $status = self::SYMBOL_PASSED;
 
@@ -65,11 +59,19 @@ class Outputter
 
     private function outputLine(string $colour, string $status, Result $result): void
     {
-        echo "{$colour}{$status} {$result->getDomain()->getUrl()} [{$result->getDomain()->getStatus()}:{$result->getStatusCode()}] {$result->getDomain()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
+        if ($this->isQuiet) {
+            return;
+        }
+
+        echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}] {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
     public function outputStats(array $passedResults, array $results, float $startTime): void
     {
+        if ($this->isQuiet) {
+            return;
+        }
+
         $numberOfResults = count($results);
         $numberOfPassedResults = count($passedResults);
         $end = microtime(true);
@@ -82,8 +84,6 @@ class Outputter
             $color = self::CONSOLE_RED;
         }
 
-        if ( ! $this->isQuiet) {
-            echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] passed in {$timeDiff}s" . PHP_EOL . PHP_EOL;
-        }
+        echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] passed in {$timeDiff}s" . PHP_EOL . PHP_EOL;
     }
 }

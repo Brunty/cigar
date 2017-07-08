@@ -14,7 +14,7 @@ class Parser
         }
 
         return array_map(function($value) {
-            return new Domain($value['url'], $value['status'], $value['content'] ?? null);
+            return new Url($value['url'], $value['status'], $value['content'] ?? null);
         }, $urls);
     }
 }

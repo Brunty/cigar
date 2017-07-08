@@ -1,6 +1,6 @@
 <?php
 
-use Brunty\Cigar\Domain;
+use Brunty\Cigar\Url;
 use Brunty\Cigar\Parser;
 use org\bovigo\vfs\vfsStream;
 
@@ -29,9 +29,9 @@ describe('Parser', function() {
         $results = (new Parser)->parse('vfs://root/.cigar.json');
 
         $expected = [
-            new Domain('http://httpbin.org/status/418', 418),
-            new Domain('http://httpbin.org/status/200', 200),
-            new Domain('http://httpbin.org/status/418', 418, 'teapot'),
+            new Url('http://httpbin.org/status/418', 418),
+            new Url('http://httpbin.org/status/200', 200),
+            new Url('http://httpbin.org/status/418', 418, 'teapot'),
         ];
 
         expect($results)->toEqual($expected);

@@ -8,11 +8,11 @@ use GuzzleHttp\Exception\RequestException;
 class AsyncChecker
 {
     /**
-     * @param Domain[] $domains
+     * @param Url[] $domains
      *
      * @return Result[]
      */
-    public function check(array $domains)
+    public function check(array $domains): array
     {
         $client = new Client();
 
@@ -23,10 +23,10 @@ class AsyncChecker
         }
 
         $results = [];
-        foreach($promises as $key => $promise) {
+        foreach ($promises as $key => $promise) {
             try {
                 $results[$key] = $promise->wait();
-            } catch(RequestException $exception) {
+            } catch (RequestException $exception) {
                 $results[$key] = $exception->getResponse();
             }
         }

@@ -20,7 +20,7 @@ describe('Outputter', function() {
     });
 
     it('outputs results', function() {
-        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
         $results = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot'),
             new \Brunty\Cigar\Result($domain, 419),
@@ -40,7 +40,7 @@ OUTPUT;
     });
 
     it('outputs results quietly', function() {
-        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
         $results = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot'),
             new \Brunty\Cigar\Result($domain, 419),
@@ -54,7 +54,7 @@ OUTPUT;
     });
 
     it('outputs the stats of the execution if all results have passed', function() {
-        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
         $results = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot'),
             new \Brunty\Cigar\Result($domain, 419),
@@ -73,7 +73,7 @@ OUTPUT;
     });
 
     it('outputs the stats of the execution if some URLs have failed', function() {
-        $domain = new \Brunty\Cigar\Domain('url', 418, 'teapot');
+        $domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
         $results = [
             new \Brunty\Cigar\Result($domain, 418, 'teapot'),
             new \Brunty\Cigar\Result($domain, 419),
@@ -91,5 +91,25 @@ OUTPUT;
         $output = PHP_EOL . "[\033[31m1/2\033[0m] passed in 1.5s" . PHP_EOL . PHP_EOL;
 
         expect($fn)->toEcho($output);
+    });
+
+
+    it('does not output stats when run quietly', function() {
+        $domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
+        $results = [
+            new \Brunty\Cigar\Result($domain, 418, 'teapot'),
+            new \Brunty\Cigar\Result($domain, 419),
+        ];
+        $passedResults = [
+            new \Brunty\Cigar\Result($domain, 418, 'teapot')
+        ];
+
+        allow('microtime')->toBeCalled()->andReturn(2.5);
+
+        $fn = function() use ($results, $passedResults) {
+            (new Outputter(true))->outputStats($passedResults, $results, 1.0);
+        };
+
+        expect($fn)->toEcho('');
     });
 });

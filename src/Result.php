@@ -5,26 +5,28 @@ namespace Brunty\Cigar;
 class Result
 {
     /**
-     * @var Domain
+     * @var Url
      */
-    private $domain;
+    private $url;
+
     /**
      * @var int
      */
     private $statusCode;
+
     /**
      * @var string
      */
     private $contents;
 
-    public function __construct(Domain $domain, int $statusCode, ?string $contents = null)
+    public function __construct(Url $url, int $statusCode, ?string $contents = null)
     {
-        $this->domain = $domain;
+        $this->url = $url;
         $this->statusCode = $statusCode;
         $this->contents = $contents;
     }
 
-    public function passed(): bool
+    public function hasPassed(): bool
     {
         return $this->statusMatches() && $this->responseHasContent();
     }
@@ -34,28 +36,24 @@ class Result
         return $this->statusCode;
     }
 
-    public function getDomain(): Domain
+    public function getUrl(): Url
     {
-        return $this->domain;
+        return $this->url;
     }
 
-    /**
-     * @return bool
-     */
     private function statusMatches(): bool
     {
-        return $this->statusCode === $this->domain->getStatus();
+        return $this->statusCode === $this->url->getStatus();
     }
 
     private function responseHasContent(): bool
     {
-        $expectedContent = $this->domain->getContent();
+        $expectedContent = $this->url->getContent();
 
         if ($expectedContent === null) {
             return true; // nothing to check
         }
 
-        return (bool) strstr($this->contents, $this->domain->getContent());
-
+        return (bool) strstr($this->contents, $expectedContent);
     }
 }
