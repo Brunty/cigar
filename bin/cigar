@@ -1,23 +1,13 @@
 #!/usr/bin/env php
 <?php
 
-$options = getopt('c:', ['version', 'help', 'quiet', 'config:']);
-
 define('CIGAR_VERSION', '1.3.2');
 $start = microtime(true);
 
-error_reporting(0);
 
-$autoloadLocations = [
-    __DIR__ . '/../../../autoload.php',
-    __DIR__ . '/../../autoload.php',
-    __DIR__ . '/../vendor/autoload.php',
-    __DIR__ . '/vendor/autoload.php'
-];
-
-foreach ($autoloadLocations as $autoloadFile) {
-    if (file_exists($autoloadFile)) {
-        require $autoloadFile;
+foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
+    if (file_exists(__DIR__ . $autoloadFileDirectory . '/autoload.php')) {
+        require __DIR__ . $autoloadFileDirectory . '/autoload.php';
         break;
     }
 }
@@ -27,9 +17,9 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$help = isset($options['help']);
+$options = getopt('c:', ['version', 'help', 'quiet', 'config:']);
 
-if($help) {
+if (isset($options['help'])) {
     $content = <<<HELP
 
 \033[33mUsage:\033[0m
@@ -50,9 +40,7 @@ HELP;
     exit(0);
 }
 
-$version = isset($options['version']);
-
-if($version) {
+if (isset($options['version'])) {
     $version = CIGAR_VERSION;
     $content = <<<VERSION
   ____ ___ ____    _    ____  
@@ -73,33 +61,31 @@ VERSION;
     exit(0);
 }
 
-$quiet = isset($options['quiet']);
-$outputter = new Outputter($quiet);
+$outputter = new Outputter(isset($options['quiet']));
 
-$file = $options['config'] ?? '.cigar.json';
-$file = $options['c'] ?? $file;
+$file = $options['c'] ?? ($options['config'] ?? '.cigar.json');
 
-if( ! file_exists($file)) {
+if ( ! file_exists($file)) {
     $outputter->writeErrorLine('Could not find configuration file: ' . $file);
     exit(1);
 }
 
 try {
     $domains = (new Parser)->parse($file);
-} catch(\Throwable $e) {
+} catch (\Throwable $e) {
     $outputter->writeErrorLine('Unable to parse .cigar.json file');
     exit(1);
 }
 
 $results = (new AsyncChecker())->check($domains);
-$passedResults = array_filter($results, function(Result $result) {
+$passedResults = array_filter($results, function (Result $result) {
     return $result->hasPassed();
 });
-$outputter->outputResults($results);
 
+$outputter->outputResults($results);
 $outputter->outputStats($passedResults, $results, $start);
 
-if ( count($passedResults) !== count($results)) {
+if (count($passedResults) !== count($results)) {
     exit(1);
 }
 
