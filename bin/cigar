@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.3.2');
+define('CIGAR_VERSION', '1.3.3');
 $start = microtime(true);
 
 
