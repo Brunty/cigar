@@ -2,46 +2,49 @@
 
 namespace Brunty\Cigar;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-
 class AsyncChecker
 {
     /**
-     * @param Url[] $domains
+     * @param Url[] $urlsToCheck
      *
      * @return Result[]
      */
-    public function check(array $domains): array
+    public function check(array $urlsToCheck): array
     {
-        $client = new Client();
+        $mh = curl_multi_init();
+        $channels = [];
 
-        $promises = [];
-        foreach ($domains as $domain) {
-            $url = $domain->getUrl();
-            $promises[$url] = $client->getAsync($url);
+        foreach ($urlsToCheck as $urlToCheck) {
+            $channel = curl_init();
+            $url = $urlToCheck->getUrl();
+            curl_setopt($channel, CURLOPT_URL, $url);
+            curl_setopt($channel, CURLOPT_HEADER, 0);
+            curl_setopt($channel, CURLOPT_RETURNTRANSFER, 1);
+            curl_multi_add_handle($mh, $channel);
+
+            $channels[$url] = $channel;
         }
 
-        $results = [];
-        foreach ($promises as $key => $promise) {
-            try {
-                $results[$key] = $promise->wait();
-            } catch (RequestException $exception) {
-                $results[$key] = $exception->getResponse();
-            }
+        $active = null;
+
+        $running = null;
+        do {
+            curl_multi_exec($mh, $running);
+        } while ($running);
+
+        $return = [];
+        foreach ($urlsToCheck as $urlToCheck) {
+            $key = $urlToCheck->getUrl();
+            $channel = $channels[$key];
+            $code = (int) curl_getinfo($channel, CURLINFO_HTTP_CODE);
+            $content = curl_multi_getcontent($channel);
+
+            $return[] = new Result($urlToCheck, $code, $content);
+            curl_multi_remove_handle($mh, $channel);
         }
 
-        $output = [];
-        foreach ($domains as $domain) {
-            $key = $domain->getUrl();
-            if ($results[$key]) {
-                $content = $domain->getContent() !== null ? $results[$key]->getBody()->getContents() : null;
-                $output[] = new Result($domain, (int) $results[$key]->getStatusCode(), $content);
-            } else {
-                $output[] = new Result($domain, (int) 0);
-            }
-        }
+        curl_multi_close($mh);
 
-        return $output;
+        return $return;
     }
 }
