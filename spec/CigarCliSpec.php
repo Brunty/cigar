@@ -45,4 +45,18 @@ describe('Cigar CLI Tool', function () {
 
         expect($process->getExitCode())->toBe(0);
     });
+
+    it('fails with insecure certs', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.insecure.json .cigar.json && ../bin/cigar');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(1);
+    });
+    
+    it('passes with insecure certs if the insecure flag is specified', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.insecure.json .cigar.json && ../bin/cigar --insecure');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(0);
+    });
 });

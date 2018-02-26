@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.4.0');
+define('CIGAR_VERSION', '1.5.0');
 $start = microtime(true);
 
 
@@ -17,7 +17,7 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$options = getopt('c:', ['version', 'help', 'quiet', 'config:']);
+$options = getopt('c:i', ['version', 'help', 'quiet', 'config:', 'insecure']);
 
 if (isset($options['help'])) {
     $content = <<<HELP
@@ -27,8 +27,9 @@ if (isset($options['help'])) {
 
 \033[33mOptions:\033[0m
       \033[32m-c file.json, --config=file.json\033[0m   Use the specified config file instead of the default .cigar.json file 
-      \033[32m--quiet\033[0m                            Do not output any message
-      \033[32m--version\033[0m                          Print the version of Cigar 
+      \033[32m-i,           --insecure\033[0m           Allow invalid SSL certificates
+      \033[32m              --quiet\033[0m              Do not output any message
+      \033[32m              --version\033[0m            Print the version of Cigar 
 
 Created by Matt Brunt
 E: matt@mfyu.co.uk
@@ -77,7 +78,9 @@ try {
     exit(1);
 }
 
-$results = (new AsyncChecker())->check($domains);
+$secure = ! (isset($options['i']) || isset($options['insecure']));
+
+$results = (new AsyncChecker($secure))->check($domains);
 $passedResults = array_filter($results, function (Result $result) {
     return $result->hasPassed();
 });
