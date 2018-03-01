@@ -4,6 +4,17 @@ namespace Brunty\Cigar;
 
 class AsyncChecker
 {
+
+    /**
+     * @var bool
+     */
+    private $checkSsl;
+
+    public function __construct(bool $checkSsl = true)
+    {
+        $this->checkSsl = $checkSsl;
+    }
+
     /**
      * @param Url[] $urlsToCheck
      *
@@ -20,6 +31,12 @@ class AsyncChecker
             curl_setopt($channel, CURLOPT_URL, $url);
             curl_setopt($channel, CURLOPT_HEADER, 0);
             curl_setopt($channel, CURLOPT_RETURNTRANSFER, 1);
+
+            if ( ! $this->checkSsl) {
+                curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($channel, CURLOPT_SSL_VERIFYHOST, 0);
+            }
+
             curl_multi_add_handle($mh, $channel);
 
             $channels[$url] = $channel;

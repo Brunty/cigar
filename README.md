@@ -62,6 +62,11 @@ If you wish to suppress the output of the test run, pass the `--quiet` option to
 
 If you wish to use an alternative configuration file, use the `vendor/bin/cigar -c file.json` or `vendor/bin/cigar --config=file.json` options when running the command.
 
+### Disabling SSL cert verification
+
+If you wish to run the tool without checking SSL certs, use the `-i` or `--insecure` option to the command: 
+`vendor/bin/cigar -i` or `vendor/bin/cigar --insecure`
+
 ### Command help & command version
 
 If you want to see all the available options for Cigar, use the command: `vendor/bin/cigar --help`
