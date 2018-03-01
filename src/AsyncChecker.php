@@ -34,6 +34,7 @@ class AsyncChecker
 
             if ( ! $this->checkSsl) {
                 curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($channel, CURLOPT_SSL_VERIFYHOST, 0);
             }
 
             curl_multi_add_handle($mh, $channel);
