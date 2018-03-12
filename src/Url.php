@@ -21,7 +21,7 @@ class Url
      */
     private $content;
 
-    public function __construct(string $url, int $status, ?string $content = null)
+    public function __construct(string $url, int $status, string $content = null)
     {
         $this->url = $url;
         $this->status = $status;
@@ -38,7 +38,7 @@ class Url
         return $this->status;
     }
 
-    public function getContent(): ?string
+    public function getContent()
     {
         return $this->content;
     }
