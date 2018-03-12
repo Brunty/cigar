@@ -26,6 +26,7 @@ if (isset($options['help'])) {
 
 \033[33mOptions:\033[0m
       \033[32m-c file.json, --config=file.json\033[0m   Use the specified config file instead of the default .cigar.json file 
+      \033[32m-u URL,       --url=URL\033[0m            Base URL for checks, e.g. https://example.org/
       \033[32m-i,           --insecure\033[0m           Allow invalid SSL certificates
       \033[32m              --quiet\033[0m              Do not output any message
       \033[32m              --version\033[0m            Print the version of Cigar 
