@@ -19,7 +19,7 @@ class Result
      */
     private $contents;
 
-    public function __construct(Url $url, int $statusCode, ?string $contents = null)
+    public function __construct(Url $url, int $statusCode, string $contents = null)
     {
         $this->url = $url;
         $this->statusCode = $statusCode;

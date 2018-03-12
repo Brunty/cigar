@@ -21,7 +21,7 @@ class Outputter
         $this->isQuiet = $isQuiet;
     }
 
-    public function writeErrorLine(string $message): void
+    public function writeErrorLine(string $message)
     {
         if ($this->isQuiet) {
             return;
@@ -30,12 +30,12 @@ class Outputter
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputResults(array $results): void
+    public function outputResults(array $results)
     {
         ob_start();
 
         foreach ($results as $result) {
-            [$colour, $status] = $this->getColourAndStatus($result);
+            list($colour, $status) = $this->getColourAndStatus($result);
             $this->outputLine($colour, $status, $result);
             ob_flush();
         }
@@ -57,7 +57,7 @@ class Outputter
         return [$colour, $status];
     }
 
-    private function outputLine(string $colour, string $status, Result $result): void
+    private function outputLine(string $colour, string $status, Result $result)
     {
         if ($this->isQuiet) {
             return;
@@ -66,7 +66,7 @@ class Outputter
         echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}] {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function outputStats(array $passedResults, array $results, float $startTime): void
+    public function outputStats(array $passedResults, array $results, float $startTime)
     {
         if ($this->isQuiet) {
             return;
