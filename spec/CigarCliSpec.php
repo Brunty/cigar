@@ -59,4 +59,18 @@ describe('Cigar CLI Tool', function () {
 
         expect($process->getExitCode())->toBe(0);
     });
+
+    it('can be passed a base URL as a short command argument', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.without-base.json .cigar.json && ../bin/cigar -u http://httpbin.org');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(0);
+    });
+
+    it('can be passed a base URL as a full command argument', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.without-base.json .cigar.json && ../bin/cigar --url=http://httpbin.org');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(0);
+    });
 });

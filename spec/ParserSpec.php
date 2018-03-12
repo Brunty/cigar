@@ -49,4 +49,57 @@ describe('Parser', function () {
 
         expect($fn)->toThrow(new ParseError('Could not parse vfs://root/.cigar.json'));
     });
+
+    it('parses a file that contains both relative and absolute URLs', function () {
+        $structure = [
+            '.cigar.json' => '[
+  {
+    "url": "/status/418",
+    "status": 418
+  },
+  {
+    "url": "status/200",
+    "status": 200
+  },
+  {
+    "url": "http://httpbin.org/status/418",
+    "status": 418,
+    "content": "teapot"
+  }
+]
+',
+        ];
+        vfsStream::setup('root', null, $structure);
+
+        $results = (new Parser('http://httpbin.org'))->parse('vfs://root/.cigar.json');
+
+        $expected = [
+            new Url('http://httpbin.org/status/418', 418),
+            new Url('http://httpbin.org/status/200', 200),
+            new Url('http://httpbin.org/status/418', 418, 'teapot'),
+        ];
+
+        expect($results)->toEqual($expected);
+    });
+
+    it('throws an exception if a URL cannot be parsed', function () {
+        $structure = [
+            '.cigar.json' => '[
+  {
+    "url": "http://:80",
+    "status": 418,
+    "content": "teapot"
+  }
+]
+',
+        ];
+        vfsStream::setup('root', null, $structure);
+
+
+        $fn = function () {
+            (new Parser)->parse('vfs://root/.cigar.json');
+        };
+
+        expect($fn)->toThrow(new ParseError('Could not parse URL: http://:80'));
+    });
 });

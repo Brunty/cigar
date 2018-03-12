@@ -62,6 +62,43 @@ If you wish to suppress the output of the test run, pass the `--quiet` option to
 
 If you wish to use an alternative configuration file, use the `vendor/bin/cigar -c file.json` or `vendor/bin/cigar --config=file.json` options when running the command.
 
+### Passing a base URL to check against
+
+If you wish to check a file of URLs relative to the root of a site against a base URL, you can do so with by using 
+`vendor/bin/cigar -u http://httpbin.org` or `vendor/bin/cigar --url=http://httpbin.org`
+
+Your configuration file can then contain URLs including:
+
+* Full absolute URLs as before (cigar won't use the base URL when checking an absolute URL)
+
+```
+[
+  {
+    "url": "http://httpbin.org/status/418",
+    "status": 418,
+    "content": "teapot"
+  }
+]
+```
+
+* URLs relative to the base url that you've specified, either with or without a leading slash.
+
+ ```
+[
+  {
+    "url": "/status/418",
+    "status": 418,
+    "content": "teapot"
+  },
+  
+  {
+    "url": "status/418",
+    "status": 418,
+    "content": "teapot"
+  }
+]
+```
+
 ### Disabling SSL cert verification
 
 If you wish to run the tool without checking SSL certs, use the `-i` or `--insecure` option to the command: 
