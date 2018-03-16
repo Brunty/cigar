@@ -31,7 +31,7 @@ class Parser
         return array_map(function($value) {
             $url = $this->getUrl($value['url']);
 
-            return new Url($url, $value['status'], $value['content'] ?? null);
+            return new Url($url, $value['status'], $value['content'] ?? null, $value['content-type'] ?? null);
         }, $urls);
     }
 

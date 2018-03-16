@@ -12,7 +12,7 @@ Install via composer:
 
 ## To use
 
-Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status` and (optional) `content` to check.
+Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
 
 ```
 [
@@ -23,7 +23,8 @@ Create a `.cigar.json` file that contains an array of json objects specifying th
   },
   {
     "url": "http://httpbin.org/status/200",
-    "status": 200
+    "status": 200,
+    "content-type": "text/html"
   },
   {
     "url": "http://httpbin.org/status/304",
@@ -41,7 +42,7 @@ Then run `vendor/bin/cigar` to have it check each of the URLs return the status 
 ```
 > vendor/bin/cigar                                           
 ✓ http://httpbin.org/status/418 [418:418] teapot
-✓ http://httpbin.org/status/200 [200:200] 
+✓ http://httpbin.org/status/200 [200:200] [text/html:text/html] 
 ✓ http://httpbin.org/status/304 [304:304] 
 ✓ http://httpbin.org/status/500 [500:500] 
 ```
@@ -49,7 +50,7 @@ Then run `vendor/bin/cigar` to have it check each of the URLs return the status 
 The format of the lines in the output is:
 
 ```
-pass/fail url [expected_code:actual_code] optional_text
+pass/fail url [expected_code:actual_code] [optional_expected_content-type:optional_actual_content-type] optional_text
 ```
 
 If all tests pass, the return code `$?` will be `0` - if any of them don't return the expected status code, the return code will be `1`

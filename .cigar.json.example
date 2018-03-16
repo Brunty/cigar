@@ -6,7 +6,8 @@
   },
   {
     "url": "http://httpbin.org/status/200",
-    "status": 200
+    "status": 200,
+    "content-type": "text/html"
   },
   {
     "url": "http://httpbin.org/status/304",
@@ -15,5 +16,10 @@
   {
     "url": "http://httpbin.org/status/500",
     "status": 500
+  },
+  {
+    "url": "http://httpbin.org/robots.txt",
+    "status": 200,
+    "content-type": "text/plain"
   }
 ]

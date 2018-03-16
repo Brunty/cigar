@@ -19,16 +19,27 @@ class Result
      */
     private $contents;
 
-    public function __construct(Url $url, int $statusCode, string $contents = null)
+    /**
+     * @var null|string
+     */
+    private $contentType;
+
+    public function __construct(Url $url, int $statusCode, string $contents = null, string $contentType = null)
     {
         $this->url = $url;
         $this->statusCode = $statusCode;
         $this->contents = $contents;
+        $this->contentType = $contentType;
     }
 
     public function hasPassed(): bool
     {
-        return $this->statusMatches() && $this->responseHasContent();
+        return $this->statusMatches() && $this->responseMatchesContentType() && $this->responseHasContent();
+    }
+
+    public function getContentType()
+    {
+        return $this->contentType;
     }
 
     public function getStatusCode(): int
@@ -44,6 +55,17 @@ class Result
     private function statusMatches(): bool
     {
         return $this->statusCode === $this->url->getStatus();
+    }
+
+    private function responseMatchesContentType(): bool
+    {
+        $expectedContentType = $this->url->getContentType();
+
+        if ($expectedContentType === null || $this->contentType === null) {
+            return true; // nothing to check
+        }
+
+        return (bool) strstr(strtolower($this->contentType), strtolower($expectedContentType));
     }
 
     private function responseHasContent(): bool
