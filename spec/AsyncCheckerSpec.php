@@ -12,7 +12,7 @@ describe('AsyncChecker', function () {
         $results = (new AsyncChecker)->check($domains);
 
         $expected = [
-            new Result($domain, 200),
+            new Result($domain, 200, '', 'text/html; charset=utf-8'),
         ];
 
         expect($results)->toEqual($expected);
@@ -29,7 +29,7 @@ describe('AsyncChecker', function () {
         $results = (new AsyncChecker)->check($domains);
 
         $expected = array_map(function (Url $domain) {
-            return new Result($domain, $domain->getStatus());
+            return new Result($domain, $domain->getStatus(), '', 'text/html; charset=utf-8');
         }, $domains);
 
         expect($results)->toEqual($expected);

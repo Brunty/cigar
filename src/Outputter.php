@@ -63,7 +63,12 @@ class Outputter
             return;
         }
 
-        echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}] {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
+        $contentType = '';
+        if ($result->getUrl()->getContentType() !== null) {
+            $contentType = " [{$result->getUrl()->getContentType()}:{$result->getContentType()}]";
+        }
+
+        echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
     public function outputStats(array $passedResults, array $results, float $startTime)

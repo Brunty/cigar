@@ -4,9 +4,9 @@ use Brunty\Cigar\Outputter;
 
 describe('Outputter', function () {
     beforeEach(function() {
-        $this->domain = new \Brunty\Cigar\Url('url', 418, 'teapot');
+        $this->domain = new \Brunty\Cigar\Url('url', 418, 'teapot', 'teapot');
         $this->results = [
-            new \Brunty\Cigar\Result($this->domain, 418, 'teapot'),
+            new \Brunty\Cigar\Result($this->domain, 418, 'teapot', 'teapot'),
             new \Brunty\Cigar\Result($this->domain, 419),
         ];
     });
@@ -35,8 +35,8 @@ describe('Outputter', function () {
         };
 
         $output = <<< OUTPUT
-\e[32m✓ url [418:418] teapot\e[0m
-\e[31m✘ url [418:419] teapot\e[0m
+\e[32m✓ url [418:418] [teapot:teapot] teapot\e[0m
+\e[31m✘ url [418:419] [teapot:] teapot\e[0m
 
 OUTPUT;
 

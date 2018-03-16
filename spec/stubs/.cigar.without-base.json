@@ -6,7 +6,8 @@
   },
   {
     "url": "status/200",
-    "status": 200
+    "status": 200,
+    "content-type": "text/html"
   },
   {
     "url": "http://httpbin.org/status/304",
