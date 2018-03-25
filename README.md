@@ -109,6 +109,8 @@ Your configuration file can then contain URLs including:
 If you wish to run the tool without checking SSL certs, use the `-i` or `--insecure` option to the command: 
 `vendor/bin/cigar -i` or `vendor/bin/cigar --insecure`
 
+**Only use this if absolutely necessary.**
+
 ### Command help & command version
 
 If you want to see all the available options for Cigar, use the command: `vendor/bin/cigar --help`
