@@ -4,6 +4,10 @@
 
 A smoke testing tool inspired by [symm/vape](https://github.com/symm/vape)
 
+Similar tools include:
+
+* [Blackfire Player](https://github.com/blackfireio/player)
+
 ## Installation
 
 Install via composer:
