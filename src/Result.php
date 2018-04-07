@@ -52,6 +52,11 @@ class Result
         return $this->url;
     }
 
+    public function getContents()
+    {
+        return $this->contents;
+    }
+
     private function statusMatches(): bool
     {
         return $this->statusCode === $this->url->getStatus();
