@@ -35,6 +35,18 @@ describe('AsyncChecker', function () {
         expect($results)->toEqual($expected);
     });
 
+    it('checks authorization header', function () {
+        $domain = new Url('http://httpbin.org/get', 200);
+        $expectedAuthHeader = 'Basic dXNyOnBzd2Q=';
+
+        $results = (new AsyncChecker(false, $expectedAuthHeader))->check([$domain]);
+
+        $decodedContent = json_decode($results[0]->getContents(), true);
+        $actualAuthHeader = $decodedContent['headers']['Authorization'] ?? null;
+
+        expect($actualAuthHeader)->toEqual($expectedAuthHeader);
+    });
+
     context('when SSL verification is disabled', function () {
         it('checks a domain that has an invalid certificate', function () {
             // Need to change for a better setup URL that doesn't default to a potentially unknown site

@@ -111,6 +111,11 @@ If you wish to run the tool without checking SSL certs, use the `-i` or `--insec
 
 **Only use this if absolutely necessary.**
 
+### Passing Authorization header
+
+If you wish to add the Authorization header, use the `-a` or `--auth` option to the command: 
+`vendor/bin/cigar -a "Basic dXNyOnBzd2Q="` or `vendor/bin/cigar --auth="Basic dXNyOnBzd2Q="`
+
 ### Command help & command version
 
 If you want to see all the available options for Cigar, use the command: `vendor/bin/cigar --help`
