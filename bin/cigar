@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.8.1');
+define('CIGAR_VERSION', '1.9.0');
 $start = microtime(true);
 
 foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
