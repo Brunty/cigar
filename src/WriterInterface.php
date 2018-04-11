@@ -8,5 +8,5 @@ interface WriterInterface
 
     public function writeLine(Result $result);
 
-    public function writeStats(int $numberOfPassedResults, int $numberOfResults, float $passed, float $timeDiff);
+    public function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff);
 }
