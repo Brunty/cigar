@@ -2,7 +2,7 @@
 
 namespace Brunty\Cigar;
 
-class EchoWriter
+class EchoWriter implements WriterInterface
 {
     const CONSOLE_GREEN = "\033[32m";
     const CONSOLE_RED = "\033[31m";
@@ -27,7 +27,7 @@ class EchoWriter
         echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function writeStats(int $numberOfPassedResults, int $numberOfResults, float $passed, float $timeDiff)
+    public function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
     {
         $color = self::CONSOLE_GREEN;
         $reset = self::CONSOLE_RESET;
