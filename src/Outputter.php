@@ -4,21 +4,20 @@ namespace Brunty\Cigar;
 
 class Outputter
 {
-    const CONSOLE_GREEN = "\033[32m";
-    const CONSOLE_RED = "\033[31m";
-    const CONSOLE_RESET = "\033[0m";
-
-    const SYMBOL_PASSED = '✓';
-    const SYMBOL_FAILED = '✘';
-
     /**
      * @var bool
      */
     private $isQuiet;
 
-    public function __construct(bool $isQuiet = false)
+    /**
+     * @var WriterInterface
+     */
+    private $writer;
+
+    public function __construct(bool $isQuiet = false, WriterInterface $writer = null)
     {
         $this->isQuiet = $isQuiet;
+        $this->writer = $writer instanceof WriterInterface ? $writer : new EchoWriter();
     }
 
     public function writeErrorLine(string $message)
@@ -27,48 +26,23 @@ class Outputter
             return;
         }
 
-        echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
+        $this->writer->writeErrorLine($message);
     }
 
     public function outputResults(array $results)
-    {
-        ob_start();
-
-        foreach ($results as $result) {
-            list($colour, $status) = $this->getColourAndStatus($result);
-            $this->outputLine($colour, $status, $result);
-            ob_flush();
-        }
-
-        ob_end_flush();
-    }
-
-    private function getColourAndStatus(Result $result): array
-    {
-        $passed = $result->hasPassed();
-        $colour = self::CONSOLE_GREEN;
-        $status = self::SYMBOL_PASSED;
-
-        if ( ! $passed) {
-            $colour = self::CONSOLE_RED;
-            $status = self::SYMBOL_FAILED;
-        }
-
-        return [$colour, $status];
-    }
-
-    private function outputLine(string $colour, string $status, Result $result)
     {
         if ($this->isQuiet) {
             return;
         }
 
-        $contentType = '';
-        if ($result->getUrl()->getContentType() !== null) {
-            $contentType = " [{$result->getUrl()->getContentType()}:{$result->getContentType()}]";
+        ob_start();
+
+        foreach ($results as $result) {
+            $this->writer->writeLine($result);
+            ob_flush();
         }
 
-        echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
+        ob_end_flush();
     }
 
     public function outputStats(array $passedResults, array $results, float $startTime)
@@ -82,13 +56,7 @@ class Outputter
         $end = microtime(true);
         $timeDiff = round($end - $startTime, 3);
         $passed = $numberOfPassedResults === $numberOfResults;
-        $color = self::CONSOLE_GREEN;
-        $reset = self::CONSOLE_RESET;
 
-        if ( ! $passed) {
-            $color = self::CONSOLE_RED;
-        }
-
-        echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] passed in {$timeDiff}s" . PHP_EOL . PHP_EOL;
+        $this->writer->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
     }
 }
