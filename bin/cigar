@@ -12,11 +12,13 @@ foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirect
 }
 
 use Brunty\Cigar\AsyncChecker;
+use Brunty\Cigar\EchoWriter;
+use Brunty\Cigar\JsonWriter;
 use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$options = getopt('c:ia:u:', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:']);
+$options = getopt('c:ia:u:j', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json']);
 
 if (isset($options['help'])) {
     $content = <<<HELP
@@ -29,6 +31,7 @@ if (isset($options['help'])) {
       \033[32m-u URL,       --url=URL\033[0m            Base URL for checks, e.g. https://example.org/
       \033[32m-i,           --insecure\033[0m           Allow invalid SSL certificates
       \033[32m-a,           --auth\033[0m               Authorization header "\074type\076 \074credentials\076"
+      \033[32m-j,           --json\033[0m               Output JSON
       \033[32m              --quiet\033[0m              Do not output any message
       \033[32m              --version\033[0m            Print the version of Cigar 
 
@@ -63,7 +66,8 @@ VERSION;
     exit(0);
 }
 
-$outputter = new Outputter(isset($options['quiet']));
+$writer = isset($options['j']) || isset($options['json']) ? new JsonWriter() : new EchoWriter();
+$outputter = new Outputter(isset($options['quiet']), $writer);
 
 $file = $options['c'] ?? ($options['config'] ?? '.cigar.json');
 $baseUrl = $options['u'] ?? ($options['url'] ?? null);
