@@ -29,23 +29,7 @@ class Outputter
         $this->writer->writeErrorLine($message);
     }
 
-    public function outputResults(array $results)
-    {
-        if ($this->isQuiet) {
-            return;
-        }
-
-        ob_start();
-
-        foreach ($results as $result) {
-            $this->writer->writeLine($result);
-            ob_flush();
-        }
-
-        ob_end_flush();
-    }
-
-    public function outputStats(array $passedResults, array $results, float $startTime)
+    public function outputResults(array $passedResults, array $results, float $startTime)
     {
         if ($this->isQuiet) {
             return;
@@ -57,6 +41,6 @@ class Outputter
         $timeDiff = round($end - $startTime, 3);
         $passed = $numberOfPassedResults === $numberOfResults;
 
-        $this->writer->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
+        $this->writer->writeResults($numberOfPassedResults, $numberOfResults, $passed, $timeDiff, ...$results);
     }
 }

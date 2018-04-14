@@ -16,7 +16,21 @@ class EchoWriter implements WriterInterface
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function writeLine(Result $result)
+    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
+    {
+        ob_start();
+
+        foreach ($results as $result) {
+            $this->writeLine($result);
+            ob_flush();
+        }
+
+        ob_end_flush();
+
+        $this->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
+    }
+
+    private function writeLine(Result $result)
     {
         $contentType = '';
         list ($colour, $status) = $this->getColourAndStatus($result);
@@ -27,7 +41,7 @@ class EchoWriter implements WriterInterface
         echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
+    private function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
     {
         $color = self::CONSOLE_GREEN;
         $reset = self::CONSOLE_RESET;

@@ -12,10 +12,21 @@ class JsonWriter implements WriterInterface
         ]), PHP_EOL;
     }
 
-    public function writeLine(Result $result)
+    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
     {
         echo json_encode([
-            'type' => 'result',
+            'type' => 'results',
+            'time_taken' => $timeDiff,
+            'passed' => $passed,
+            'results_count' => $numberOfResults,
+            'results_passed_count' => $numberOfPassedResults,
+            'results' => array_map([$this, 'line'], $results),
+        ]), PHP_EOL;
+    }
+
+    private function line(Result $result): array
+    {
+        return [
             'passed' => $result->hasPassed(),
             'url' => $result->getUrl()->getUrl(),
             'status_code_expected' => $result->getUrl()->getStatus(),
@@ -23,17 +34,6 @@ class JsonWriter implements WriterInterface
             'content_type_expected' => $result->getUrl()->getContentType(),
             'content_type_actual' => $result->getContentType(),
             'content_expected' => $result->getUrl()->getContent(),
-        ]), PHP_EOL;
-    }
-
-    public function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
-    {
-        echo json_encode([
-            'type' => 'stats',
-            'passed' => $passed,
-            'results_count' => $numberOfResults,
-            'passed_results_count' => $numberOfPassedResults,
-            'time_taken' => $timeDiff,
-        ]), PHP_EOL;
+        ];
     }
 }

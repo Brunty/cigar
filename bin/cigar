@@ -92,8 +92,7 @@ $passedResults = array_filter($results, function (Result $result) {
     return $result->hasPassed();
 });
 
-$outputter->outputResults($results);
-$outputter->outputStats($passedResults, $results, $start);
+$outputter->outputResults($passedResults, $results, $start);
 
 if (count($passedResults) !== count($results)) {
     exit(1);
