@@ -106,16 +106,55 @@ Your configuration file can then contain URLs including:
 
 ### Disabling SSL cert verification
 
-If you wish to run the tool without checking SSL certs, use the `-i` or `--insecure` option to the command: 
+If you wish to run the tool without checking SSL certs, use the `-i` or `--insecure` option with the command: 
 `vendor/bin/cigar -i` or `vendor/bin/cigar --insecure`
 
 **Only use this if absolutely necessary.**
 
 ### Passing Authorization header
 
-If you wish to add the Authorization header, use the `-a` or `--auth` option to the command: 
+If you wish to add the Authorization header, use the `-a` or `--auth` option with the command: 
 `vendor/bin/cigar -a "Basic dXNyOnBzd2Q="` or `vendor/bin/cigar --auth="Basic dXNyOnBzd2Q="`
 
+### JSON Output
+
+If you wish to output the results in JSON format, use the `-j` or `--json` option with the command:
+
+`vendor/bin/cigar -j` or `vendor/bin/cigar --json`
+
+That will produce output in the following format:
+
+```
+{"type":"results","time_taken":0.213,"passed":true,"results_count":1,"results_passed_count":1,"results":[{"passed":true,"url":"http:\/\/httpbin.org\/status\/418","status_code_expected":418,"status_code_actual":418,"content_type_expected":null,"content_type_actual":"","content_expected":"teapot"}]}
+```
+
+If you wish to view it in a more human readable format, you can pipe it to an output tool such as `python -m json
+.tool` like so:
+
+`vendor/bin/cigar -j | python -m json.tool`
+
+To produce:
+
+```
+{
+    "passed": true,
+    "results": [
+        {
+            "content_expected": "teapot",
+            "content_type_actual": "",
+            "content_type_expected": null,
+            "passed": true,
+            "status_code_actual": 418,
+            "status_code_expected": 418,
+            "url": "http://httpbin.org/status/418"
+        }
+    ],
+    "results_count": 1,
+    "results_passed_count": 1,
+    "time_taken": 0.266,
+    "type": "results"
+}
+```
 ### Command help & command version
 
 If you want to see all the available options for Cigar, use the command: `vendor/bin/cigar --help`
