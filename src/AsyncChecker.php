@@ -15,10 +15,16 @@ class AsyncChecker
      */
     private $authorizationHeader;
 
-    public function __construct(bool $checkSsl = true, string $authorizationHeader = null)
+    /**
+     * @var array
+     */
+    private $headers;
+
+    public function __construct(bool $checkSsl = true, string $authorizationHeader = null, array $headers = [])
     {
         $this->checkSsl = $checkSsl;
         $this->authorizationHeader = $authorizationHeader;
+        $this->headers = $headers;
     }
 
     /**
@@ -42,8 +48,13 @@ class AsyncChecker
                 curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, 0);
                 curl_setopt($channel, CURLOPT_SSL_VERIFYHOST, 0);
             }
+
             if ($this->authorizationHeader) {
-                curl_setopt($channel, CURLOPT_HTTPHEADER, ["Authorization: {$this->authorizationHeader}"]);
+                $this->headers[] = "Authorization: {$this->authorizationHeader}";
+            }
+
+            if (!empty($this->headers)) {
+                curl_setopt($channel, CURLOPT_HTTPHEADER, $this->headers);
             }
 
             curl_multi_add_handle($mh, $channel);

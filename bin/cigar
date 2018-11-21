@@ -18,7 +18,7 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$options = getopt('c:ia:u:j', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json']);
+$options = getopt('c:ia:u:jh:', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json', 'header:']);
 
 if (isset($options['help'])) {
     $content = <<<HELP
@@ -31,6 +31,7 @@ if (isset($options['help'])) {
       \033[32m-u URL,       --url=URL\033[0m            Base URL for checks, e.g. https://example.org/
       \033[32m-i,           --insecure\033[0m           Allow invalid SSL certificates
       \033[32m-a,           --auth\033[0m               Authorization header "\074type\076 \074credentials\076"
+      \033[32m-h,           --header\033[0m             Custom header "\074name\076: \074value\076"
       \033[32m-j,           --json\033[0m               Output JSON
       \033[32m              --quiet\033[0m              Do not output any message
       \033[32m              --version\033[0m            Print the version of Cigar 
@@ -86,8 +87,9 @@ try {
 
 $secure = ! (isset($options['i']) || isset($options['insecure']));
 $authorization = $options['a'] ?? $options['auth'] ?? null;
+$headers = (array) ($options['h'] ?? $options['header'] ?? []);
 
-$results = (new AsyncChecker($secure, $authorization))->check($domains);
+$results = (new AsyncChecker($secure, $authorization, $headers))->check($domains);
 $passedResults = array_filter($results, function (Result $result) {
     return $result->hasPassed();
 });
