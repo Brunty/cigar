@@ -73,4 +73,18 @@ describe('Cigar CLI Tool', function () {
 
         expect($process->getExitCode())->toBe(0);
     });
+
+    it('can be passed headers as full arguments', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.headers.json .cigar.json && ../bin/cigar --header="X-Cigar-Header: some-header-content-here" --header="X-Cigar-Header-2: more-header-content-here"');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(0);
+    });
+
+    it('can be passed headers as short arguments', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.headers.json .cigar.json && ../bin/cigar -h "X-Cigar-Header: some-header-content-here" -h "X-Cigar-Header-2: more-header-content-here"');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(0);
+    });
 });

@@ -1,0 +1,12 @@
+[
+  {
+    "url": "http://httpbin.org/headers",
+    "status": 200,
+    "content": "some-header-content-here"
+  },
+  {
+    "url": "http://httpbin.org/headers",
+    "status": 200,
+    "content": "more-header-content-here"
+  }
+]
