@@ -57,6 +57,13 @@ class AsyncChecker
                 curl_setopt($channel, CURLOPT_HTTPHEADER, $this->headers);
             }
 
+            if ($urlToCheck->getConnectTimeout() !== null && $urlToCheck->getConnectTimeout() > 0) {
+                curl_setopt($channel, CURLOPT_CONNECTTIMEOUT, $urlToCheck->getConnectTimeout());
+            }
+            if ($urlToCheck->getTimeout() !== null && $urlToCheck->getTimeout() > 0) {
+                curl_setopt($channel, CURLOPT_TIMEOUT, $urlToCheck->getTimeout());
+            }
+
             curl_multi_add_handle($mh, $channel);
 
             $channels[$url] = $channel;
