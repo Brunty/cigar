@@ -87,4 +87,11 @@ describe('Cigar CLI Tool', function () {
 
         expect($process->getExitCode())->toBe(0);
     });
+
+    it('can be passed timeout arguments and it overwrites the configured value in .cigar.json', function () {
+        $process = new Process('cd spec && cp stubs/.cigar.timeouts.json .cigar.json && ../bin/cigar -t 1');
+        $process->run();
+
+        expect($process->getExitCode())->toBe(1);
+    });
 });
