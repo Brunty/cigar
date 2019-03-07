@@ -18,7 +18,7 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$options = getopt('c:ia:u:jh:t:', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json', 'header:', 'timeout:']);
+$options = getopt('c:ia:u:jh:t:s:', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json', 'header:', 'timeout:', 'connect-timeout:']);
 
 if (isset($options['help'])) {
     $content = <<<HELP
@@ -32,7 +32,7 @@ if (isset($options['help'])) {
       \033[32m-i,           --insecure\033[0m                 Allow invalid SSL certificates
       \033[32m-a,           --auth\033[0m                     Authorization header "\074type\076 \074credentials\076"
       \033[32m-h,           --header\033[0m                   Custom header "\074name\076: \074value\076"
-      \033[32m              --connect-timeout=TIMEOUT\033[0m  Connect Timeout
+      \033[32m-s            --connect-timeout=TIMEOUT\033[0m  Connect Timeout
       \033[32m-t,           --timeout=TIMEOUT\033[0m          Timeout
       \033[32m-j,           --json\033[0m                     Output JSON
       \033[32m              --quiet\033[0m                    Do not output any message
@@ -83,7 +83,7 @@ if ( ! file_exists($file)) {
 $secure = ! (isset($options['i']) || isset($options['insecure']));
 $authorization = $options['a'] ?? $options['auth'] ?? null;
 $headers = (array) ($options['h'] ?? $options['header'] ?? []);
-$connectTimeout = $options['connect-timeout'] ?? null;
+$connectTimeout = $options['s'] ?? $options['connect-timeout'] ?? null;
 $timeout = $options['t'] ?? $options['timeout'] ?? null;
 
 try {
