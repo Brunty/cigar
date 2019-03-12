@@ -62,4 +62,20 @@ describe('AsyncChecker', function () {
             expect($results[0]->getStatusCode())->toEqual($expected[0]->getStatusCode());
         });
     });
+
+    context('when timeouts are set', function () {
+        it('checks a URL that will timeout', function () {
+            // Need to change for a better setup URL that doesn't default to a potentially unknown site
+            $domain = new Url('https://httpbin.org/delay/3', 200, null, null, 1, 1);
+            $domains = [$domain];
+
+            $results = (new AsyncChecker())->check($domains);
+
+            $expected = [
+                new Result($domain, 0),
+            ];
+
+            expect($results[0]->getStatusCode())->toEqual($expected[0]->getStatusCode());
+        });
+    });
 });

@@ -9,9 +9,21 @@ class Parser
      */
     private $baseUrl;
 
-    public function __construct(string $baseUrl = null)
+    /**
+     * @var null|int
+     */
+    private $connectTimeout;
+
+    /**
+     * @var null|int
+     */
+    private $timeout;
+
+    public function __construct(string $baseUrl = null, int $connectTimeout = null, int $timeout = null)
     {
         $this->baseUrl = rtrim($baseUrl, '/');
+        $this->connectTimeout = $connectTimeout;
+        $this->timeout = $timeout;
     }
 
     /**
@@ -31,7 +43,14 @@ class Parser
         return array_map(function($value) {
             $url = $this->getUrl($value['url']);
 
-            return new Url($url, $value['status'], $value['content'] ?? null, $value['content-type'] ?? null);
+            return new Url(
+                $url,
+                $value['status'],
+                $value['content'] ?? null,
+                $value['content-type'] ?? null,
+                $value['connect-timeout'] ?? $this->connectTimeout,
+                $value['timeout'] ?? $this->timeout
+            );
         }, $urls);
     }
 

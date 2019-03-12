@@ -26,12 +26,30 @@ class Url
      */
     private $contentType;
 
-    public function __construct(string $url, int $status, string $content = null, string $contentType = null)
-    {
+    /**
+     * @var null|int
+     */
+    private $connectTimeout;
+
+    /**
+     * @var null|int
+     */
+    private $timeout;
+
+    public function __construct(
+        string $url,
+        int $status,
+        string $content = null,
+        string $contentType = null,
+        int $connectTimeout = null,
+        int $timeout = null
+    ) {
         $this->url = $url;
         $this->status = $status;
         $this->content = $content;
         $this->contentType = $contentType;
+        $this->connectTimeout = $connectTimeout;
+        $this->timeout = $timeout;
     }
 
     public function getUrl(): string
@@ -52,5 +70,15 @@ class Url
     public function getContentType()
     {
         return $this->contentType;
+    }
+
+    public function getConnectTimeout()
+    {
+        return $this->connectTimeout;
+    }
+
+    public function getTimeout()
+    {
+        return $this->timeout;
     }
 }

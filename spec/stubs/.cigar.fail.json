@@ -16,5 +16,17 @@
   {
     "url": "http://httpbin.org/status/500",
     "status": 501
+  },
+  {
+    "url": "http://httpbin.org/delay/3",
+    "status": 200,
+    "request-timeout": 1,
+    "response-timeout": 1
+  },
+  {
+    "url": "http://httpbin.org/drip?duration=3",
+    "status": 200,
+    "request-timeout": 1,
+    "response-timeout": 1
   }
 ]

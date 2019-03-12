@@ -19,7 +19,10 @@ describe('Parser', function () {
   {
     "url": "http://httpbin.org/status/418",
     "status": 418,
-    "content": "teapot"
+    "content": "teapot",
+    "content-type": "kitchen/teapot",
+    "connect-timeout": 1,
+    "timeout": 2
   }
 ]
 ',
@@ -31,7 +34,7 @@ describe('Parser', function () {
         $expected = [
             new Url('http://httpbin.org/status/418', 418),
             new Url('http://httpbin.org/status/200', 200),
-            new Url('http://httpbin.org/status/418', 418, 'teapot'),
+            new Url('http://httpbin.org/status/418', 418, 'teapot', 'kitchen/teapot', 1, 2),
         ];
 
         expect($results)->toEqual($expected);

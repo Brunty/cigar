@@ -21,5 +21,17 @@
     "url": "http://httpbin.org/robots.txt",
     "status": 200,
     "content-type": "text/plain"
+  },
+  {
+    "url": "http://httpbin.org/delay/3",
+    "status": 200,
+    "request-timeout": 1,
+    "response-timeout": 5
+  },
+  {
+    "url": "http://httpbin.org/drip?duration=3",
+    "status": 200,
+    "request-timeout": 1,
+    "response-timeout": 5
   }
 ]
