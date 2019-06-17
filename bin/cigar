@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.11.1');
+define('CIGAR_VERSION', '1.12.1');
 $start = microtime(true);
 
 foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
@@ -25,6 +25,7 @@ if (isset($options['help'])) {
 
 \033[33mUsage:\033[0m
   cigar [options]
+
 
 \033[33mOptions:\033[0m
       \033[32m-c file.json, --config=file.json\033[0m         Use the specified config file instead of the default .cigar.json file 
