@@ -26,7 +26,7 @@
   },
   "require-dev": {
     "symfony/process": "^3.3",
-    "mikey179/vfsStream": "^1.6",
+    "mikey179/vfsstream": "^1.6",
     "satooshi/php-coveralls": "^1.0",
     "kahlan/kahlan": "^4.0"
   },
