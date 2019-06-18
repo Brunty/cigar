@@ -14,6 +14,10 @@ Install via composer:
 
 `composer require brunty/cigar --dev`
 
+Pull via docker:
+
+`docker pull brunty/cigar`
+
 ## To use
 
 Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
@@ -41,7 +45,13 @@ Create a `.cigar.json` file that contains an array of json objects specifying th
 ]
 ```
 
-Then run `vendor/bin/cigar` to have it check each of the URLs return the status code expected.
+**When installed via composer:**
+
+Run `vendor/bin/cigar` to have it check each of the URLs return the status code expected.
+
+**When pulled via docker:**
+
+Run `docker run -v $(pwd):/app --rm brunty/cigar` to have it check each of the URLs return the status code expected.
 
 ```
 > vendor/bin/cigar                                           
