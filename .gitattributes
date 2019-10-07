@@ -6,4 +6,3 @@ spec/ export-ignore
 .gitignore export-ignore
 .travis.yml export-ignore
 CONTRIBUTING.md export-ignore
-phpunit.xml export-ignore
