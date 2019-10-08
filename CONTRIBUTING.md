@@ -13,3 +13,13 @@ This code of conduct applies both within project spaces and in public spaces whe
 Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by opening an issue or contacting one or more of the project maintainers.
 
 This Code of Conduct is adapted from the Contributor Covenant, version 1.1.0, available at http://contributor-covenant.org/version/1/1/0/
+
+### Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Install dependencies (`composer install`)
+4. Cigar uses [Kahlan](https://kahlan.github.io/docs/) as test runner. The integration tests reside within the `spec` directory. So, please make sure all test suite pass (`vendor/bin/kahlan --reporter=verbose`)
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create new Pull Request
