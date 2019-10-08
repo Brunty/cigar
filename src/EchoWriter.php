@@ -11,11 +11,17 @@ class EchoWriter implements WriterInterface
     const SYMBOL_PASSED = '✓';
     const SYMBOL_FAILED = '✘';
 
+    /**
+     * @return void
+     */
     public function writeErrorLine(string $message)
     {
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
+    /**
+     * @return void
+     */
     public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
     {
         ob_start();
@@ -30,6 +36,9 @@ class EchoWriter implements WriterInterface
         $this->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
     }
 
+    /**
+     * @return void
+     */
     private function writeLine(Result $result)
     {
         $contentType = '';
@@ -41,6 +50,9 @@ class EchoWriter implements WriterInterface
         echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
     }
 
+    /**
+     * @return void
+     */
     private function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
     {
         $color = self::CONSOLE_GREEN;

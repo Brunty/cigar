@@ -62,21 +62,33 @@ class Url
         return $this->status;
     }
 
+    /**
+     * @return null|string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @return null|string
+     */
     public function getContentType()
     {
         return $this->contentType;
     }
 
+    /**
+     * @return null|int
+     */
     public function getConnectTimeout()
     {
         return $this->connectTimeout;
     }
 
+    /**
+     * @return null|int
+     */
     public function getTimeout()
     {
         return $this->timeout;

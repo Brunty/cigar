@@ -20,11 +20,11 @@ class Result
     private $contents;
 
     /**
-     * @var null|string
+     * @var string
      */
     private $contentType;
 
-    public function __construct(Url $url, int $statusCode, string $contents = null, string $contentType = null)
+    public function __construct(Url $url, int $statusCode, string $contents = '', string $contentType = '')
     {
         $this->url = $url;
         $this->statusCode = $statusCode;
@@ -37,6 +37,9 @@ class Result
         return $this->statusMatches() && $this->responseMatchesContentType() && $this->responseHasContent();
     }
 
+    /**
+     * @return null|string
+     */
     public function getContentType()
     {
         return $this->contentType;
@@ -52,6 +55,9 @@ class Result
         return $this->url;
     }
 
+    /**
+     * @return string|null
+     */
     public function getContents()
     {
         return $this->contents;
@@ -66,7 +72,7 @@ class Result
     {
         $expectedContentType = $this->url->getContentType();
 
-        if ($expectedContentType === null || $this->contentType === null) {
+        if ($expectedContentType === null || $this->contentType === '') {
             return true; // nothing to check
         }
 

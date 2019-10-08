@@ -20,6 +20,9 @@ class Outputter
         $this->writer = $writer instanceof WriterInterface ? $writer : new EchoWriter();
     }
 
+    /**
+     * @return void
+     */
     public function writeErrorLine(string $message)
     {
         if ($this->isQuiet) {
@@ -29,6 +32,9 @@ class Outputter
         $this->writer->writeErrorLine($message);
     }
 
+    /**
+     * @return void
+     */
     public function outputResults(array $passedResults, array $results, float $startTime)
     {
         if ($this->isQuiet) {

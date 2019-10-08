@@ -5,7 +5,7 @@ namespace Brunty\Cigar;
 class Parser
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $baseUrl;
 
@@ -21,7 +21,7 @@ class Parser
 
     public function __construct(string $baseUrl = null, int $connectTimeout = null, int $timeout = null)
     {
-        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->baseUrl = rtrim((string)$baseUrl, '/');
         $this->connectTimeout = $connectTimeout;
         $this->timeout = $timeout;
     }
@@ -40,7 +40,7 @@ class Parser
             throw new \ParseError('Could not parse ' . $filename);
         }
 
-        return array_map(function($value) {
+        return array_map(function(array $value): Url {
             $url = $this->getUrl($value['url']);
 
             return new Url(
