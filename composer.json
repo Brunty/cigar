@@ -32,5 +32,8 @@
   },
   "bin": [
     "bin/cigar"
-  ]
+  ],
+  "scripts": {
+    "test": "vendor/bin/kahlan --reporter=verbose"
+  }
 }
