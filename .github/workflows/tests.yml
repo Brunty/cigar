@@ -10,7 +10,7 @@ jobs:
         runs-on: ${{ matrix.operating-system }}
         strategy:
             matrix:
-                operating-system: [ubuntu-latest, windows-latest, macOS-latest]
+                operating-system: [ubuntu-latest]
                 php-versions: ['7.1', '7.2', '7.3', '7.4']
         name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
         steps:
@@ -21,7 +21,7 @@ jobs:
               with:
                   php-version: ${{ matrix.php-versions }}
                   extensions: curl #optional
-                  ini-values: "post_max_size=256M" #optional
+                  coverage: xdebug
             - name: Check PHP Version
               run: php -v
             - name: Install dependencies
