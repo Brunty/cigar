@@ -11,7 +11,7 @@ jobs:
         strategy:
             matrix:
                 operating-system: [ubuntu-latest, windows-latest, macOS-latest]
-                php-versions: ['7.0', '7.1', '7.2', '7.3', '7.4']
+                php-versions: ['7.1', '7.2', '7.3', '7.4']
         name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
         steps:
             - name: Checkout
@@ -24,6 +24,8 @@ jobs:
                   ini-values: "post_max_size=256M" #optional
             - name: Check PHP Version
               run: php -v
+            - name: Install dependencies
+              run: composer install
             - name: Run Kahlan
               run: vendor/bin/kahlan --reporter=verbose --clover=coverage.xml
             - name: Coveralls
