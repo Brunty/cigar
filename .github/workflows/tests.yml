@@ -1,0 +1,32 @@
+name: Tests
+on:
+    push:
+        branches: [ master ]
+    pull_request:
+        branches: [ master ]
+
+jobs:
+    run:
+        runs-on: ${{ matrix.operating-system }}
+        strategy:
+            matrix:
+                operating-system: [ubuntu-latest]
+                php-versions: ['7.1', '7.2', '7.3', '7.4']
+        name: PHP ${{ matrix.php-versions }} on ${{ matrix.operating-system }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Install PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+                  extensions: curl #optional
+                  coverage: xdebug
+            - name: Check PHP Version
+              run: php -v
+            - name: Install dependencies
+              run: composer install
+            - name: Run Kahlan
+              run: vendor/bin/kahlan --reporter=verbose --clover=coverage.xml
+            - name: Coveralls
+              run: php vendor/bin/coveralls
