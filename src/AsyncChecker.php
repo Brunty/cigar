@@ -11,7 +11,7 @@ class AsyncChecker
     private $checkSsl;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $authorizationHeader;
 
@@ -71,7 +71,7 @@ class AsyncChecker
 
         $active = null;
 
-        $running = null;
+        $running = 0;
         do {
             curl_multi_exec($mh, $running);
         } while ($running);
@@ -82,7 +82,7 @@ class AsyncChecker
             $channel = $channels[$key];
             $code = (int) curl_getinfo($channel, CURLINFO_HTTP_CODE);
             $content = curl_multi_getcontent($channel);
-            $contentType = curl_getinfo($channel, CURLINFO_CONTENT_TYPE) ?? null;
+            $contentType = curl_getinfo($channel, CURLINFO_CONTENT_TYPE) ?? '';
 
             $return[] = new Result($urlToCheck, $code, $content, $contentType);
             curl_multi_remove_handle($mh, $channel);
