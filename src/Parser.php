@@ -5,7 +5,7 @@ namespace Brunty\Cigar;
 class Parser
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $baseUrl;
 
@@ -21,26 +21,35 @@ class Parser
 
     public function __construct(string $baseUrl = null, int $connectTimeout = null, int $timeout = null)
     {
-        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->baseUrl = rtrim((string)$baseUrl, '/');
         $this->connectTimeout = $connectTimeout;
         $this->timeout = $timeout;
     }
 
     /**
-     * @param string $filename
+     * @psalm-type ParseOutput = array{
+     *   url: string,
+     *   status: int,
+     *   content: ?string,
+     *   content-type: ?string,
+     *   connect-timeout: ?int,
+     *   timeout: ?int
+     * }
      *
      * @return Url[]
      * @throws \ParseError
      */
     public function parse(string $filename): array
     {
+        /** @var array<ParseOutput>|null $urls */
         $urls = json_decode(file_get_contents($filename), true);
 
         if($urls === null) {
             throw new \ParseError('Could not parse ' . $filename);
         }
 
-        return array_map(function($value) {
+        return array_map(function(array $value) {
+            /** @var ParseOutput $value */
             $url = $this->getUrl($value['url']);
 
             return new Url(

@@ -4,6 +4,9 @@ namespace Brunty\Cigar;
 
 class JsonWriter implements WriterInterface
 {
+    /**
+     * @return void
+     */
     public function writeErrorLine(string $message)
     {
         echo json_encode([
@@ -12,6 +15,9 @@ class JsonWriter implements WriterInterface
         ]), PHP_EOL;
     }
 
+    /**
+     * @return void
+     */
     public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
     {
         echo json_encode([
