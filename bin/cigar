@@ -90,7 +90,7 @@ $timeout = $options['t'] ?? $options['timeout'] ?? null;
 try {
     $domains = (new Parser($baseUrl, $connectTimeout, $timeout))->parse($file);
 } catch (\Throwable $e) {
-    $outputter->writeErrorLine('Unable to parse .cigar.json file');
+    $outputter->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
     exit(1);
 }
 
