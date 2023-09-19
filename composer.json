@@ -15,9 +15,7 @@
     }
   },
   "autoload-dev": {
-    "psr-4": {
-      "Brunty\\Cigar\\Tests\\": "tests/"
-    }
+    "psr-4": {}
   },
   "require": {
     "php": ">=7.0",
