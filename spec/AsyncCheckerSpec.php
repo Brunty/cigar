@@ -49,15 +49,14 @@ describe('AsyncChecker', function () {
 
     context('when SSL verification is disabled', function () {
         it('checks a domain that has an invalid certificate', function () {
+            $statusCode = 403;
             // Need to change for a better setup URL that doesn't default to a potentially unknown site
-            $domain = new Url('https://cigar-do-not-work.apps.brunty.me', 200);
+            $domain = new Url('https://cigar-do-not-work.apps.brunty.me', $statusCode);
             $domains = [$domain];
 
             $results = (new AsyncChecker(false))->check($domains);
 
-            $expected = [
-                new Result($domain, 200),
-            ];
+            $expected = [new Result($domain, $statusCode)];
 
             expect($results[0]->getStatusCode())->toEqual($expected[0]->getStatusCode());
         });

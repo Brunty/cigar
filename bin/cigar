@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-define('CIGAR_VERSION', '1.12.3');
+define('CIGAR_VERSION', '2.0.0');
 $start = microtime(true);
 
 foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
@@ -18,7 +18,22 @@ use Brunty\Cigar\Outputter;
 use Brunty\Cigar\Parser;
 use Brunty\Cigar\Result;
 
-$options = getopt('c:ia:u:jh:t:s:', ['version', 'help', 'quiet', 'config:', 'insecure', 'auth:', 'url:', 'json', 'header:', 'timeout:', 'connect-timeout:']);
+$options = getopt(
+    'c:ia:u:jh:t:s:',
+    [
+        'version',
+        'help',
+        'quiet',
+        'config:',
+        'insecure',
+        'auth:',
+        'url:',
+        'json',
+        'header:',
+        'timeout:',
+        'connect-timeout:',
+    ]
+);
 
 if (isset($options['help'])) {
     $content = <<<HELP
@@ -40,8 +55,9 @@ if (isset($options['help'])) {
       \033[32m              --version\033[0m                  Print the version of Cigar 
 
 Created by Matt Brunt
-E: matt@mfyu.co.uk
+E: matt@brunty.me
 T: twitter.com/Brunty
+M: brunty.social/@brunty
 G: github.com/brunty/cigar
 
 HELP;

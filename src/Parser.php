@@ -21,7 +21,7 @@ class Parser
 
     public function __construct(string $baseUrl = null, int $connectTimeout = null, int $timeout = null)
     {
-        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->baseUrl = rtrim((string) $baseUrl, '/');
         $this->connectTimeout = $connectTimeout;
         $this->timeout = $timeout;
     }
