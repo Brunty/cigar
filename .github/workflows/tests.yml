@@ -27,6 +27,6 @@ jobs:
             - name: Install dependencies
               run: composer install
             - name: Run Kahlan
-              run: vendor/bin/kahlan --reporter=verbose --clover=coverage.xml
-            - name: Coveralls
-              run: php vendor/bin/php-coveralls
+              run: XDEBUG_MODE=coverage vendor/bin/kahlan --reporter=verbose --clover=coverage.xml
+            #- name: Coveralls
+            #  run: php vendor/bin/php-coveralls
