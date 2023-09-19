@@ -29,4 +29,4 @@ jobs:
             - name: Run Kahlan
               run: vendor/bin/kahlan --reporter=verbose --clover=coverage.xml
             - name: Coveralls
-              run: php vendor/bin/coveralls
+              run: php vendor/bin/php-coveralls
