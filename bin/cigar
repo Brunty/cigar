@@ -43,7 +43,7 @@ if (isset($options['help'])) {
 
 
 \033[33mOptions:\033[0m
-      \033[32m-c file.json, --config=file.json\033[0m         Use the specified config file instead of the default .cigar.json file 
+      \033[32m-c file.json, --config=file.json\033[0m         Use the specified config file instead of the default cigar.json file 
       \033[32m-u URL,       --url=URL\033[0m                  Base URL for checks, e.g. https://example.org/
       \033[32m-i,           --insecure\033[0m                 Allow invalid SSL certificates
       \033[32m-a,           --auth\033[0m                     Authorization header "\074type\076 \074credentials\076"
@@ -89,7 +89,7 @@ VERSION;
 $writer = isset($options['j']) || isset($options['json']) ? new JsonWriter() : new EchoWriter();
 $outputter = new Outputter(isset($options['quiet']), $writer);
 
-$file = $options['c'] ?? ($options['config'] ?? '.cigar.json');
+$file = $options['c'] ?? ($options['config'] ?? 'cigar.json');
 $baseUrl = $options['u'] ?? ($options['url'] ?? null);
 
 if ( ! file_exists($file)) {

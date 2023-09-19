@@ -18,9 +18,14 @@ Pull via docker:
 
 `docker pull brunty/cigar`
 
+## Upgrading from V1 - Breaking Changes
+
+- `.cigar.json` default config file name is now just `cigar.json`
+- No longer testing against PHP 7.X and PHP 8.0 
+
 ## To use
 
-Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
+Create a `cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
 
 ```
 [
