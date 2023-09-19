@@ -2,3 +2,5 @@
 /composer.lock
 .cigar.json
 .idea
+coverage.xml
+clover.xml
