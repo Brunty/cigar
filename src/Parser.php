@@ -1,46 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
+
+use ParseError;
 
 class Parser
 {
-    /**
-     * @var string
-     */
-    private $baseUrl;
+    private string $baseUrl;
 
-    /**
-     * @var null|int
-     */
-    private $connectTimeout;
-
-    /**
-     * @var null|int
-     */
-    private $timeout;
-
-    public function __construct(string $baseUrl = null, int $connectTimeout = null, int $timeout = null)
-    {
+    public function __construct(
+        ?string $baseUrl = null,
+        private readonly ?int $connectTimeout = null,
+        private readonly ?int $timeout = null
+    ) {
         $this->baseUrl = rtrim((string) $baseUrl, '/');
-        $this->connectTimeout = $connectTimeout;
-        $this->timeout = $timeout;
     }
 
     /**
-     * @param string $filename
-     *
      * @return Url[]
-     * @throws \ParseError
+     *
+     * @throws ParseError
      */
     public function parse(string $filename): array
     {
         $urls = json_decode(file_get_contents($filename), true);
 
-        if($urls === null) {
-            throw new \ParseError('Could not parse ' . $filename);
+        if ($urls === null) {
+            throw new ParseError('Could not parse ' . $filename);
         }
 
-        return array_map(function($value) {
+        return array_map(function (array $value) {
             $url = $this->getUrl($value['url']);
 
             return new Url(
@@ -55,20 +46,17 @@ class Parser
     }
 
     /**
-     * @param string $url
-     *
-     * @return string
-     * @throws \ParseError
+     * @throws ParseError
      */
     private function getUrl(string $url): string
     {
         $urlParts = parse_url($url);
 
         if ($urlParts === false) {
-            throw new \ParseError("Could not parse URL: $url");
+            throw new ParseError("Could not parse URL: $url");
         }
 
-        if ($this->baseUrl !== null && ! isset($urlParts['host'])) {
+        if ($this->baseUrl !== '' && !isset($urlParts['host'])) {
             $url = $this->baseUrl . '/' . ltrim($url, '/');
         }
 

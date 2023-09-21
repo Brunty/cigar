@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
 
 class QuietWriter implements Writer
@@ -8,7 +10,12 @@ class QuietWriter implements Writer
     {
     }
 
-    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results): void
-    {
+    public function writeResults(
+        int $numberOfPassedResults,
+        int $numberOfResults,
+        bool $passed,
+        float $timeDiff,
+        Result ...$results
+    ): void {
     }
 }

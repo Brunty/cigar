@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
 
 class InputOption
@@ -11,7 +13,8 @@ class InputOption
         readonly public string $longCode,
         readonly public string $shortCode,
         readonly public int $valueMode,
-        readonly public string $description = ''
+        readonly public string $description = '',
+        readonly public mixed $default = null
     ) {
     }
 
@@ -19,16 +22,19 @@ class InputOption
         string $longCode,
         string $shortCode = '',
         int $valueMode = self::VALUE_NONE,
-        string $description = ''
+        string $description = '',
+        mixed $default = null
     ): self {
-        return new self($longCode, $shortCode, $valueMode, $description);
+        return new self($longCode, $shortCode, $valueMode, $description, $default);
     }
 
-    public function fullShortCode(): string {
+    public function fullShortCode(): string
+    {
         return $this->shortCode . ($this->valueMode === self::VALUE_REQUIRED && $this->shortCode !== '' ? ':' : '');
     }
 
-    public function fullLongCode(): string {
+    public function fullLongCode(): string
+    {
         return $this->longCode . ($this->valueMode === self::VALUE_REQUIRED && $this->longCode !== '' ? ':' : '');
     }
 

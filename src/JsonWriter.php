@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
 
 class JsonWriter implements Writer
@@ -12,8 +14,13 @@ class JsonWriter implements Writer
         ]), PHP_EOL;
     }
 
-    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results): void
-    {
+    public function writeResults(
+        int $numberOfPassedResults,
+        int $numberOfResults,
+        bool $passed,
+        float $timeDiff,
+        Result ...$results
+    ): void {
         echo json_encode([
             'type' => 'results',
             'time_taken' => $timeDiff,
@@ -28,12 +35,12 @@ class JsonWriter implements Writer
     {
         return [
             'passed' => $result->hasPassed(),
-            'url' => $result->getUrl()->getUrl(),
-            'status_code_expected' => $result->getUrl()->getStatus(),
-            'status_code_actual' => $result->getStatusCode(),
-            'content_type_expected' => $result->getUrl()->getContentType(),
-            'content_type_actual' => $result->getContentType(),
-            'content_expected' => $result->getUrl()->getContent(),
+            'url' => $result->url->url,
+            'status_code_expected' => $result->url->status,
+            'status_code_actual' => $result->statusCode,
+            'content_type_expected' => $result->url->contentType,
+            'content_type_actual' => $result->contentType,
+            'content_expected' => $result->url->content,
         ];
     }
 }

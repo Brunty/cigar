@@ -6,6 +6,7 @@ $start = microtime(true);
 
 foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
     if (file_exists(__DIR__ . $autoloadFileDirectory . '/autoload.php')) {
+        /** @psalm-suppress UnresolvableInclude */
         require __DIR__ . $autoloadFileDirectory . '/autoload.php';
         break;
     }
@@ -23,15 +24,15 @@ use Brunty\Cigar\Result;
 
 $input = new Input();
 $input->configureOptions([
-    'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message', false),
-    'version' => InputOption::create('version', '', InputOption::VALUE_NONE, 'Print the version of Cigar', false),
+    'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message'),
+    'version' => InputOption::create('version', '', InputOption::VALUE_NONE, 'Print the version of Cigar'),
     'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED, 'Use the specified config file instead of the default cigar.json file'),
     'quiet' => InputOption::create('quiet', 'q', InputOption::VALUE_NONE, 'Do not output any message'),
     'insecure' => InputOption::create('insecure', 'i', InputOption::VALUE_NONE, 'Allow invalid SSL certificates'),
     'auth' => InputOption::create('auth', 'a', InputOption::VALUE_REQUIRED, 'Authorization header "<type> <credentials>"'),
     'url' => InputOption::create('url', 'u', InputOption::VALUE_REQUIRED, 'Base URL for checks, e.g. https://example.org/'),
     'header' => InputOption::create('header', 'h', InputOption::VALUE_REQUIRED, 'Custom header "<name>: <value>", can be passed multiple times to send multiple headers'),
-    'timeout' => InputOption::create('timeout', 't', InputOption::VALUE_NONE, 'Timeout in seconds'),
+    'timeout' => InputOption::create('timeout', 't', InputOption::VALUE_REQUIRED, 'Timeout in seconds'),
     'connect-timeout' => InputOption::create('connect-timeout', 'c', InputOption::VALUE_REQUIRED, 'Connect Timeout in seconds'),
     'json' => InputOption::create('json', 'j', InputOption::VALUE_NONE, 'Output JSON'),
 ]);
@@ -74,7 +75,7 @@ if ($input->getOption('version')) {
 
 \033[0;90;49mThe simple smoke testing tool.\033[0m
 
-Version \033[36m{$version}\033[0m
+Version \033[36m$version\033[0m
 
 For additional help use \033[36m--help\033[0m
 

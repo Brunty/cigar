@@ -26,12 +26,20 @@
     "mikey179/vfsstream": "^1.6",
     "php-coveralls/php-coveralls": "^2.6",
     "kahlan/kahlan": "^5.2",
-    "symfony/process": "^6.3"
+    "symfony/process": "^6.3",
+    "vimeo/psalm": "^5.15",
+    "squizlabs/php_codesniffer": "^3.7",
+    "slevomat/coding-standard": "^8.13"
   },
   "bin": [
     "bin/cigar"
   ],
   "scripts": {
     "test": "vendor/bin/kahlan --reporter=verbose"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

@@ -1,11 +1,13 @@
 <?php
 
-use Brunty\Cigar\Url;
+declare(strict_types=1);
+
 use Brunty\Cigar\Parser;
+use Brunty\Cigar\Url;
 use org\bovigo\vfs\vfsStream;
 
-describe('Parser', function () {
-    it('parses a file that is correctly formatted', function () {
+describe('Parser', function (): void {
+    it('parses a file that is correctly formatted', function (): void {
         $structure = [
             'cigar.json' => '[
   {
@@ -29,7 +31,7 @@ describe('Parser', function () {
         ];
         vfsStream::setup('root', null, $structure);
 
-        $results = (new Parser)->parse('vfs://root/cigar.json');
+        $results = (new Parser())->parse('vfs://root/cigar.json');
 
         $expected = [
             new Url('http://httpbin.org/status/418', 418),
@@ -40,20 +42,20 @@ describe('Parser', function () {
         expect($results)->toEqual($expected);
     });
 
-    it('lets errors be thrown on parsing a file', function () {
+    it('lets errors be thrown on parsing a file', function (): void {
         $structure = [
             'cigar.json' => 'http://httpbin.org/status/418',
         ];
         vfsStream::setup('root', null, $structure);
 
-        $fn = function () {
-            (new Parser)->parse('vfs://root/cigar.json');
+        $fn = function (): void {
+            (new Parser())->parse('vfs://root/cigar.json');
         };
 
         expect($fn)->toThrow(new ParseError('Could not parse vfs://root/cigar.json'));
     });
 
-    it('parses a file that contains both relative and absolute URLs', function () {
+    it('parses a file that contains both relative and absolute URLs', function (): void {
         $structure = [
             'cigar.json' => '[
   {
@@ -85,7 +87,7 @@ describe('Parser', function () {
         expect($results)->toEqual($expected);
     });
 
-    it('throws an exception if a URL cannot be parsed', function () {
+    it('throws an exception if a URL cannot be parsed', function (): void {
         $structure = [
             'cigar.json' => '[
   {
@@ -99,8 +101,8 @@ describe('Parser', function () {
         vfsStream::setup('root', null, $structure);
 
 
-        $fn = function () {
-            (new Parser)->parse('vfs://root/cigar.json');
+        $fn = function (): void {
+            (new Parser())->parse('vfs://root/cigar.json');
         };
 
         expect($fn)->toThrow(new ParseError('Could not parse URL: http://:80'));

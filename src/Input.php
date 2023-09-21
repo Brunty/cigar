@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
 
 use InvalidArgumentException;
@@ -7,9 +9,12 @@ use InvalidArgumentException;
 class Input
 {
     private string $optionShortCodes = '';
+
     private array $optionLongCodes = [];
+
     /** @var array<string, InputOption> */
     private array $options = [];
+
     private array $submittedOptions = [];
 
     /**
@@ -35,16 +40,14 @@ class Input
 
     /**
      * If the option was configured with {@see InputOption::VALUE_REQUIRED} then it will be the string value of what was
-     * submitted via the option on the command line, if it's set to {@see InputOption::VALUE_NONE} then it'll be just
-     * true / false based on if the option was set on the command line or not
-     *
-     * @param string $optionName
-     * @return array|string|bool
+     * submitted via the option on the command line if supplied, if not it'll be what's configured as the default for
+     * that option, if it's set to {@see InputOption::VALUE_NONE} then it'll be just true / false based on if the option
+     * was set on the command line or not
      */
-    public function getOption(string $optionName): array|string|bool
+    public function getOption(string $optionName): mixed
     {
         if (array_key_exists($optionName, $this->options) === false) {
-            throw new InvalidArgumentException("Could not find option with {$optionName}");
+            throw new InvalidArgumentException("Could not find option with $optionName");
         }
 
         if ($this->submittedOptions === []) {
@@ -65,7 +68,7 @@ class Input
                 return $this->submittedOptions[$option->shortCode];
             }
 
-            return false;
+            return $option->default;
         }
 
         return $longOptionWasSubmitted || $shortOptionWasSubmitted;
