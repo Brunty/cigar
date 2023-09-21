@@ -33,7 +33,7 @@ describe('Cigar CLI Tool', function () {
     });
 
     it('can be given an alternative configuration file to load with a short command line flag', function () {
-        $process = Process::fromShellCommandline('cd spec && cp stubs/cigar.pass.json .config.json && ../bin/cigar -c .config.json');
+        $process = Process::fromShellCommandline('cd spec && cp stubs/cigar.pass.json .config.json && ../bin/cigar -f .config.json');
         $process->run();
 
         expect($process->getExitCode())->toBe(0);

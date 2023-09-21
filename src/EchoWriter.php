@@ -2,7 +2,7 @@
 
 namespace Brunty\Cigar;
 
-class EchoWriter implements WriterInterface
+class EchoWriter implements Writer
 {
     const CONSOLE_GREEN = "\033[32m";
     const CONSOLE_RED = "\033[31m";
@@ -11,12 +11,12 @@ class EchoWriter implements WriterInterface
     const SYMBOL_PASSED = '✓';
     const SYMBOL_FAILED = '✘';
 
-    public function writeErrorLine(string $message)
+    public function writeErrorLine(string $message): void
     {
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
+    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results): void
     {
         ob_start();
 

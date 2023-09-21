@@ -1,9 +1,9 @@
 <?php
 
-use Brunty\Cigar\Outputter;
+use Brunty\Cigar\Output;
 use Brunty\Cigar\Result;
 
-describe('Outputter', function () {
+describe('Output', function () {
     beforeEach(function() {
         $this->domain = new \Brunty\Cigar\Url('url', 418, 'teapot', 'teapot');
         $this->results = [
@@ -17,18 +17,10 @@ describe('Outputter', function () {
 
     it('outputs an error line', function () {
         $fn = function () {
-            (new Outputter)->writeErrorLine('Error message');
+            (new Output())->writeErrorLine('Error message');
         };
 
         expect($fn)->toEcho("\033[31mError message\033[0m\n");
-    });
-
-    it('does not output an error line when run quietly', function () {
-        $fn = function () {
-            (new Outputter($quiet = true))->writeErrorLine('Error message');
-        };
-
-        expect($fn)->toEcho('');
     });
 
     it('outputs results if some results have passed', function () {
@@ -38,7 +30,7 @@ describe('Outputter', function () {
         allow('microtime')->toBeCalled()->andReturn(3);
 
         $fn = function () use ($passedResults, $results) {
-            (new Outputter)->outputResults($passedResults, $results, 1.5);
+            (new Output())->outputResults($passedResults, $results, 1.5);
         };
 
         $output = <<< OUTPUT
@@ -51,16 +43,5 @@ describe('Outputter', function () {
 OUTPUT;
 
         expect($fn)->toEcho($output);
-    });
-
-    it('outputs results quietly', function () {
-        $results = $this->results;
-        $passedResults = $this->passedResults;
-
-        $fn = function () use ($passedResults, $results) {
-            (new Outputter(true))->outputResults($passedResults, $results, 1.5);
-        };
-
-        expect($fn)->toEcho('');
     });
 });

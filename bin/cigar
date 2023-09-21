@@ -13,46 +13,44 @@ foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirect
 
 use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\EchoWriter;
+use Brunty\Cigar\Input;
+use Brunty\Cigar\InputOption;
 use Brunty\Cigar\JsonWriter;
-use Brunty\Cigar\Outputter;
+use Brunty\Cigar\Output;
 use Brunty\Cigar\Parser;
+use Brunty\Cigar\QuietWriter;
 use Brunty\Cigar\Result;
 
-$options = getopt(
-    'c:ia:u:jh:t:s:',
-    [
-        'version',
-        'help',
-        'quiet',
-        'config:',
-        'insecure',
-        'auth:',
-        'url:',
-        'json',
-        'header:',
-        'timeout:',
-        'connect-timeout:',
-    ]
+$input = new Input();
+$input->configureOptions([
+    'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message', false),
+    'version' => InputOption::create('version', '', InputOption::VALUE_NONE, 'Print the version of Cigar', false),
+    'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED, 'Use the specified config file instead of the default cigar.json file'),
+    'quiet' => InputOption::create('quiet', 'q', InputOption::VALUE_NONE, 'Do not output any message'),
+    'insecure' => InputOption::create('insecure', 'i', InputOption::VALUE_NONE, 'Allow invalid SSL certificates'),
+    'auth' => InputOption::create('auth', 'a', InputOption::VALUE_REQUIRED, 'Authorization header "<type> <credentials>"'),
+    'url' => InputOption::create('url', 'u', InputOption::VALUE_REQUIRED, 'Base URL for checks, e.g. https://example.org/'),
+    'header' => InputOption::create('header', 'h', InputOption::VALUE_REQUIRED, 'Custom header "<name>: <value>", can be passed multiple times to send multiple headers'),
+    'timeout' => InputOption::create('timeout', 't', InputOption::VALUE_NONE, 'Timeout in seconds'),
+    'connect-timeout' => InputOption::create('connect-timeout', 'c', InputOption::VALUE_REQUIRED, 'Connect Timeout in seconds'),
+    'json' => InputOption::create('json', 'j', InputOption::VALUE_NONE, 'Output JSON'),
+]);
+
+$output = new Output(
+    $input->getOption('quiet')
+        ? new QuietWriter()
+        : ($input->getOption('json') ? new JsonWriter() : new EchoWriter())
 );
 
-if (isset($options['help'])) {
+$inputOptionsHelpOutput = $output->helpOutputForInputOptions($input);
+
+if ($input->getOption('help')) {
     $content = <<<HELP
 
 \033[33mUsage:\033[0m
   cigar [options]
 
-
-\033[33mOptions:\033[0m
-      \033[32m-c file.json, --config=file.json\033[0m         Use the specified config file instead of the default cigar.json file 
-      \033[32m-u URL,       --url=URL\033[0m                  Base URL for checks, e.g. https://example.org/
-      \033[32m-i,           --insecure\033[0m                 Allow invalid SSL certificates
-      \033[32m-a,           --auth\033[0m                     Authorization header "\074type\076 \074credentials\076"
-      \033[32m-h,           --header\033[0m                   Custom header "\074name\076: \074value\076"
-      \033[32m-s            --connect-timeout=TIMEOUT\033[0m  Connect Timeout
-      \033[32m-t,           --timeout=TIMEOUT\033[0m          Timeout
-      \033[32m-j,           --json\033[0m                     Output JSON
-      \033[32m              --quiet\033[0m                    Do not output any message
-      \033[32m              --version\033[0m                  Print the version of Cigar 
+{$inputOptionsHelpOutput}
 
 Created by Matt Brunt
 E: matt@brunty.me
@@ -65,17 +63,17 @@ HELP;
     exit(0);
 }
 
-if (isset($options['version'])) {
+if ($input->getOption('version')) {
     $version = CIGAR_VERSION;
     $content = <<<VERSION
-  ____ ___ ____    _    ____  
- / ___|_ _/ ___|  / \  |  _ \ 
+  ____ ___ ____    _    ____
+ / ___|_ _/ ___|  / \  |  _ \
 | |    | | |  _  / _ \ | |_) |
-| |___ | | |_| |/ ___ \|  _ < 
+| |___ | | |_| |/ ___ \|  _ <
  \____|___\____/_/   \_\_| \_\
 
 \033[0;90;49mThe simple smoke testing tool.\033[0m
- 
+
 Version \033[36m{$version}\033[0m
 
 For additional help use \033[36m--help\033[0m
@@ -86,27 +84,24 @@ VERSION;
     exit(0);
 }
 
-$writer = isset($options['j']) || isset($options['json']) ? new JsonWriter() : new EchoWriter();
-$outputter = new Outputter(isset($options['quiet']), $writer);
+$configFile = $input->getOption('config') ?: 'cigar.json';
+$baseUrl = $input->getOption('url') ?: null;
 
-$file = $options['c'] ?? ($options['config'] ?? 'cigar.json');
-$baseUrl = $options['u'] ?? ($options['url'] ?? null);
-
-if ( ! file_exists($file)) {
-    $outputter->writeErrorLine('Could not find configuration file: ' . $file);
+if ( ! file_exists($configFile)) {
+    $output->writeErrorLine('Could not find configuration file: ' . $configFile);
     exit(1);
 }
 
-$secure = ! (isset($options['i']) || isset($options['insecure']));
-$authorization = $options['a'] ?? $options['auth'] ?? null;
-$headers = (array) ($options['h'] ?? $options['header'] ?? []);
-$connectTimeout = $options['s'] ?? $options['connect-timeout'] ?? null;
-$timeout = $options['t'] ?? $options['timeout'] ?? null;
+$secure = ! $input->getOption('insecure');
+$authorization = $input->getOption('auth') ?: null;
+$headers = $input->getOption('header') ?: [];
+$connectTimeout = $input->getOption('connect-timeout') ?: null;
+$timeout = $input->getOption('timeout') ?: null;
 
 try {
-    $domains = (new Parser($baseUrl, $connectTimeout, $timeout))->parse($file);
-} catch (\Throwable $e) {
-    $outputter->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
+    $domains = (new Parser($baseUrl, $connectTimeout, $timeout))->parse($configFile);
+} catch (Throwable $e) {
+    $output->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
     exit(1);
 }
 
@@ -115,7 +110,7 @@ $passedResults = array_filter($results, function (Result $result) {
     return $result->hasPassed();
 });
 
-$outputter->outputResults($passedResults, $results, $start);
+$output->outputResults($passedResults, $results, $start);
 
 if (count($passedResults) !== count($results)) {
     exit(1);
