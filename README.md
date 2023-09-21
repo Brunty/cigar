@@ -22,6 +22,9 @@ Pull via docker:
 
 - `.cigar.json` default config file name is now just `cigar.json`
 - No longer testing against PHP 7.X and PHP 8.0 
+- Command line option changes:
+  - `-c` is now `-f` for config file
+  - `-s` is now `-c` for connect-timeout
 
 ## To use
 
