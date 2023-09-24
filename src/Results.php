@@ -33,13 +33,13 @@ class Results
         return $this->passedResults;
     }
 
-    public function numberOfTotalResults(): int
+    public function totalNumberOfResults(): int
     {
         return count($this->results);
     }
 
     public function hasPassed(): bool
     {
-        return $this->numberOfTotalResults() === $this->numberOfPassedResults();
+        return $this->totalNumberOfResults() === $this->numberOfPassedResults();
     }
 }

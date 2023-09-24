@@ -19,7 +19,7 @@ class Output
 
     public function outputResults(Results $results, float $startedAt): void
     {
-        $timeDiff = round($this->timer->stop() - $startedAt, 3);
+        $timeDiff = round($this->timer->now() - $startedAt, 3);
 
         $this->writer->writeResults($results, $timeDiff);
     }

@@ -10,6 +10,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Brunty\Cigar\Result
+ */
 class ResultTest extends TestCase
 {
     public static function results(): array

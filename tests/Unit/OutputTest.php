@@ -65,12 +65,7 @@ class OutputTest extends TestCase
         };
 
         $timer = new class implements Timer {
-            public function start(): float
-            {
-                return 0.5;
-            }
-
-            public function stop(): float
+            public function now(): float
             {
                 return 2.63456;
             }
@@ -105,7 +100,7 @@ class OutputTest extends TestCase
             'url' => InputOption::create('url', '', InputOption::VALUE_REQUIRED, 'Something with a URL'),
         ]);
         $helpText = $output->generateHelpOutputForOptions($inputOptions);
-        file_put_contents('test', $helpText);
+
         $expectedHelpText = <<<HELP
 \033[33mOptions:\033[0m
   \033[32m          --help        \033[0m  Show the help message

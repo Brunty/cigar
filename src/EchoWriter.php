@@ -63,7 +63,7 @@ class EchoWriter implements Writer
             PHP_EOL . '[%s%s/%s%s] passed in %ss' . PHP_EOL . PHP_EOL,
             $color,
             $results->numberOfPassedResults(),
-            $results->numberOfTotalResults(),
+            $results->totalNumberOfResults(),
             $reset,
             $timeDiff
         );

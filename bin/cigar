@@ -23,7 +23,7 @@ use Brunty\Cigar\QuietWriter;
 use Brunty\Cigar\SystemTimer;
 
 $timer = new SystemTimer();
-$start = $timer->start();
+$start = $timer->now();
 
 $inputOptions = new InputOptions([
     'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message'),

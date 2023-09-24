@@ -22,7 +22,7 @@ class JsonWriter implements Writer
             'type' => 'results',
             'time_taken' => $timeDiff,
             'passed' => $results->hasPassed(),
-            'results_count' => $results->numberOfTotalResults(),
+            'results_count' => $results->totalNumberOfResults(),
             'results_passed_count' => $results->numberOfPassedResults(),
             'results' => array_map([$this, 'line'], $results->results),
         ]), PHP_EOL;
