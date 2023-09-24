@@ -16,14 +16,14 @@ use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\EchoWriter;
 use Brunty\Cigar\Input;
 use Brunty\Cigar\InputOption;
+use Brunty\Cigar\InputOptions;
 use Brunty\Cigar\JsonWriter;
 use Brunty\Cigar\Output;
 use Brunty\Cigar\ConfigParser;
 use Brunty\Cigar\QuietWriter;
 use Brunty\Cigar\Result;
 
-$input = new Input();
-$input->configureOptions([
+$inputOptions = new InputOptions([
     'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message'),
     'version' => InputOption::create('version', '', InputOption::VALUE_NONE, 'Print the version of Cigar'),
     'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED, 'Use the specified config file instead of the default cigar.json file'),
@@ -37,13 +37,17 @@ $input->configureOptions([
     'json' => InputOption::create('json', 'j', InputOption::VALUE_NONE, 'Output JSON'),
 ]);
 
+$submittedInput = getopt($inputOptions->shortCodes, $inputOptions->longCodes);
+
+$input = new Input($inputOptions, $submittedInput);
+
 $output = new Output(
     $input->getOption('quiet')
         ? new QuietWriter()
         : ($input->getOption('json') ? new JsonWriter() : new EchoWriter())
 );
 
-$inputOptionsHelpOutput = $output->helpOutputForInputOptions($input);
+$inputOptionsHelpOutput = $output->helpOutputForInputOptions($inputOptions);
 
 if ($input->getOption('help')) {
     $content = <<<HELP

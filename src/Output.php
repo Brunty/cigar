@@ -31,14 +31,14 @@ class Output
         $this->writer->writeResults($numberOfPassedResults, $numberOfResults, $passed, $timeDiff, ...$results);
     }
 
-    public function helpOutputForInputOptions(Input $input): string
+    public function helpOutputForInputOptions(InputOptions $inputOptions): string
     {
         $optionStartSequence = "\033[32m";
         $optionEndSequence = "\033[0m";
 
         $output = '';
 
-        if ($input->options() !== []) {
+        if ($inputOptions->options !== []) {
             $output = "\033[33mOptions:\033[0m" . PHP_EOL;
         }
 
@@ -46,7 +46,7 @@ class Output
         $longestLongCodeLength = 0;
         $valuePlaceholderLength = mb_strlen(self::VALUE_PLACEHOLDER);
 
-        foreach ($input->options() as $option) {
+        foreach ($inputOptions->options as $option) {
             $shortCodeLength = 3; // at it's shortest it is "-c "
             $longCodeLength = mb_strlen($option->longCode) + 3; // +3 is for double dash before & the space or = after
 
@@ -64,7 +64,7 @@ class Output
             }
         }
 
-        foreach ($input->options() as $option) {
+        foreach ($inputOptions->options as $option) {
             $shortCode = $this->getShortCodeOutput($option);
             $longCode = $this->getLongCodeOutput($option);
 

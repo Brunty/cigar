@@ -39,9 +39,9 @@
     "bin/cigar"
   ],
   "scripts": {
-    "test": "XDEBUG_MODE=coverage vendor/bin/phpunit --color=always --coverage-html=./build/coverage",
+    "test": "XDEBUG_MODE=coverage php vendor/bin/phpunit --color=always --coverage-html=./build/coverage",
     "test:mutation": "vendor/bin/infection",
-    "psalm": "vendor/bin/psalm --config=psalm.xml --show-info=true",
+    "psalm": "vendor/bin/psalm --config=psalm.xml --show-info=true --no-cache",
     "phpcs": "vendor/bin/phpcs -p --colors --standard=phpcs.xml",
     "check": [
       "@psalm",

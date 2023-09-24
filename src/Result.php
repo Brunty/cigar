@@ -9,8 +9,8 @@ class Result
     public function __construct(
         public readonly Url $url,
         public readonly int $statusCode,
-        public readonly ?string $contents = null,
-        public readonly ?string $contentType = null
+        public readonly string $contents = '',
+        public readonly string $contentType = ''
     ) {
     }
 
@@ -28,7 +28,7 @@ class Result
     {
         $expectedContentType = $this->url->contentType;
 
-        if ($expectedContentType === null || $this->contentType === null) {
+        if ($expectedContentType === '') {
             return true; // nothing to check
         }
 
@@ -39,10 +39,10 @@ class Result
     {
         $expectedContent = $this->url->content;
 
-        if ($expectedContent === null) {
+        if ($expectedContent === '') {
             return true; // nothing to check
         }
 
-        return (bool) strstr((string) $this->contents, $expectedContent);
+        return (bool) strstr($this->contents, $expectedContent);
     }
 }

@@ -37,8 +37,8 @@ class ConfigParser
             return new Url(
                 $url,
                 $value['status'],
-                $value['content'] ?? null,
-                $value['content-type'] ?? null,
+                $value['content'] ?? '',
+                $value['content-type'] ?? '',
                 $value['connect-timeout'] ?? $this->connectTimeout,
                 $value['timeout'] ?? $this->timeout
             );

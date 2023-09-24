@@ -44,24 +44,31 @@ class ResultTest extends TestCase
                 false,
             ],
             'Status match, Content null, Content Type match' => [
-                new Url('url', 200, null, 'TEXT'),
+                new Url('url', 200, '', 'TEXT'),
                 200,
                 'some text',
                 'TExt',
                 true,
             ],
-            'Status match, Content null, Content Type null' => [
-                new Url('url', 200, null, null),
+            'Status match, Content empty, Content Type empty' => [
+                new Url('url', 200, '', ''),
                 200,
                 'some text',
                 'text',
                 true,
             ],
-            'Status match, Content null mismatch, Content Type null' => [
-                new Url('url', 200, 'content', null),
+            'Status match, Content mismatch, Content Type empty' => [
+                new Url('url', 200, 'content', ''),
                 200,
-                null,
+                '',
                 'text',
+                false,
+            ],
+            'Status match, Content both empty, Content Type empty' => [
+                new Url('url', 200, '', 't'),
+                200,
+                '',
+                'y',
                 false,
             ],
         ];

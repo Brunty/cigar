@@ -8,34 +8,8 @@ use InvalidArgumentException;
 
 class Input
 {
-    private string $optionShortCodes = '';
-
-    private array $optionLongCodes = [];
-
-    /** @var array<string, InputOption> */
-    private array $options = [];
-
-    private array $submittedOptions = [];
-
-    /**
-     * @param array<string, InputOption> $options
-     */
-    public function configureOptions(array $options): void
+    public function __construct(private readonly InputOptions $inputOptions, private readonly array $submittedOptions)
     {
-        ksort($options);
-        $this->options = $options;
-        foreach ($options as $inputOption) {
-            $this->optionShortCodes .= $inputOption->fullShortCode();
-            $this->optionLongCodes[] = $inputOption->fullLongCode();
-        }
-    }
-
-    /**
-     * @return array<string, InputOption>
-     */
-    public function options(): array
-    {
-        return $this->options;
     }
 
     /**
@@ -46,26 +20,22 @@ class Input
      */
     public function getOption(string $optionName): mixed
     {
-        if (array_key_exists($optionName, $this->options) === false) {
+        if (array_key_exists($optionName, $this->inputOptions->options) === false) {
             throw new InvalidArgumentException("Could not find option with $optionName");
         }
 
-        if ($this->submittedOptions === []) {
-            $this->submittedOptions = getopt($this->optionShortCodes, $this->optionLongCodes);
-        }
-
-        $option = $this->options[$optionName];
+        $option = $this->inputOptions->options[$optionName];
 
         $longOptionWasSubmitted = array_key_exists($option->longCode, $this->submittedOptions);
         $shortOptionWasSubmitted = array_key_exists($option->shortCode, $this->submittedOptions);
 
         if ($option->valueIsRequired()) {
             if ($longOptionWasSubmitted) {
-                return $this->submittedOptions[$option->longCode];
+                return $this->submittedOptions[$option->longCode] ?: $option->default;
             }
 
             if ($shortOptionWasSubmitted) {
-                return $this->submittedOptions[$option->shortCode];
+                return $this->submittedOptions[$option->shortCode] ?: $option->default;
             }
 
             return $option->default;

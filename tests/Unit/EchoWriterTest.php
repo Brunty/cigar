@@ -45,7 +45,7 @@ CONTENT;
         $results = [
             new Result(new Url('url1', 201, 'c', 't'), 200, 'c', 't'),
             new Result(new Url('url2', 200, 'c', 't'), 200, 'c', 't'),
-            new Result(new Url('url3', 200, null), 200, null, null),
+            new Result(new Url('url3', 200, ''), 200, '', ''),
         ];
 
         $expected = <<<CONTENT

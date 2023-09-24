@@ -39,7 +39,7 @@ class EchoWriter implements Writer
     {
         $contentType = '';
         [$colour, $status] = $this->getColourAndStatus($result);
-        if ($result->url->contentType !== null) {
+        if ($result->url->contentType !== '') {
             $contentType = sprintf(' [%s:%s]', $result->url->contentType, $result->contentType);
         }
 

@@ -9,8 +9,8 @@ class Url
     public function __construct(
         public readonly string $url,
         public readonly int $status,
-        public readonly ?string $content = null,
-        public readonly ?string $contentType = null,
+        public readonly string $content = '',
+        public readonly string $contentType = '',
         public readonly ?int $connectTimeout = null,
         public readonly ?int $timeout = null
     ) {
