@@ -6,12 +6,14 @@ namespace Brunty\Cigar\Tests\Unit;
 
 use Brunty\Cigar\EchoWriter;
 use Brunty\Cigar\Result;
+use Brunty\Cigar\Results;
 use Brunty\Cigar\Url;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Brunty\Cigar\EchoWriter
+ * @uses \Brunty\Cigar\Results
  * @uses \Brunty\Cigar\Result
  * @uses \Brunty\Cigar\Url
  */
@@ -42,11 +44,11 @@ CONTENT;
     #[Test]
     public function it_writes_results(): void
     {
-        $results = [
+        $results = new Results(
             new Result(new Url('url1', 201, 'c', 't'), 200, 'c', 't'),
             new Result(new Url('url2', 200, 'c', 't'), 200, 'c', 't'),
             new Result(new Url('url3', 200, ''), 200, '', ''),
-        ];
+        );
 
         $expected = <<<CONTENT
 \033[31m✘ url1 [201:200] [t:t] c\033[0m
@@ -59,7 +61,7 @@ CONTENT;
 CONTENT;
 
         ob_start();
-        $this->writer->writeResults(2, 3, false, 0.5, ...$results);
+        $this->writer->writeResults($results, 0.5);
         $output = ob_get_contents();
         ob_end_clean();
 

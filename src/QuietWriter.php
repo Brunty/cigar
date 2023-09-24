@@ -10,12 +10,7 @@ class QuietWriter implements Writer
     {
     }
 
-    public function writeResults(
-        int $numberOfPassedResults,
-        int $numberOfResults,
-        bool $passed,
-        float $timeDiff,
-        Result ...$results
-    ): void {
+    public function writeResults(Results $results, float $timeDiff): void
+    {
     }
 }

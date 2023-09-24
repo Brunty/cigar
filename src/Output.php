@@ -6,13 +6,10 @@ namespace Brunty\Cigar;
 
 class Output
 {
-    private Writer $writer;
-
     private const VALUE_PLACEHOLDER = 'VALUE';
 
-    public function __construct(Writer $writer = null)
+    public function __construct(private readonly Writer $writer, private readonly Timer $timer)
     {
-        $this->writer = $writer instanceof Writer ? $writer : new EchoWriter();
     }
 
     public function writeErrorLine(string $message): void
@@ -20,15 +17,11 @@ class Output
         $this->writer->writeErrorLine($message);
     }
 
-    public function outputResults(array $passedResults, array $results, float $startTime): void
+    public function outputResults(Results $results, float $startedAt): void
     {
-        $numberOfResults = count($results);
-        $numberOfPassedResults = count($passedResults);
-        $endTime = microtime(true);
-        $timeDiff = round($endTime - $startTime, 3);
-        $passed = $numberOfPassedResults === $numberOfResults;
+        $timeDiff = round($this->timer->stop() - $startedAt, 3);
 
-        $this->writer->writeResults($numberOfPassedResults, $numberOfResults, $passed, $timeDiff, ...$results);
+        $this->writer->writeResults($results, $timeDiff);
     }
 
     public function helpOutputForInputOptions(InputOptions $inputOptions): string
@@ -72,7 +65,7 @@ class Output
             $longCode = str_pad($longCode, $longestLongCodeLength);
 
 
-            $output = sprintf(
+            $output .= sprintf(
                 '  %s%s  %s%s  %s' . PHP_EOL,
                 $optionStartSequence,
                 $shortCode,
@@ -94,7 +87,7 @@ class Output
         }
 
         if ($option->valueIsRequired()) {
-            $shortCode = "-$option->shortCode VALUE";
+            $shortCode = "-$option->shortCode " . self::VALUE_PLACEHOLDER;
         }
 
         return $shortCode;
@@ -105,7 +98,7 @@ class Output
         $longCode = "--$option->longCode";
 
         if ($option->valueIsRequired()) {
-            $longCode = "--$option->longCode=VALUE";
+            $longCode = "--$option->longCode=" . self::VALUE_PLACEHOLDER;
         }
 
         return $longCode;

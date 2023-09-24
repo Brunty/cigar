@@ -15,19 +15,16 @@ class JsonWriter implements Writer
     }
 
     public function writeResults(
-        int $numberOfPassedResults,
-        int $numberOfResults,
-        bool $passed,
+        Results $results,
         float $timeDiff,
-        Result ...$results
     ): void {
         echo json_encode([
             'type' => 'results',
             'time_taken' => $timeDiff,
-            'passed' => $passed,
-            'results_count' => $numberOfResults,
-            'results_passed_count' => $numberOfPassedResults,
-            'results' => array_map([$this, 'line'], $results),
+            'passed' => $results->hasPassed(),
+            'results_count' => $results->numberOfTotalResults(),
+            'results_passed_count' => $results->numberOfPassedResults(),
+            'results' => array_map([$this, 'line'], $results->results),
         ]), PHP_EOL;
     }
 

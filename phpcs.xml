@@ -197,5 +197,5 @@
 
     <file>bin/cigar</file>
     <file>src</file>
-    <file>spec</file>
+    <file>tests</file>
 </ruleset>

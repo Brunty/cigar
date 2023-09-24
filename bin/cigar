@@ -2,7 +2,6 @@
 <?php
 
 define('CIGAR_VERSION', '2.0.0');
-$start = microtime(true);
 
 foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirectory) {
     if (file_exists(__DIR__ . $autoloadFileDirectory . '/autoload.php')) {
@@ -21,19 +20,27 @@ use Brunty\Cigar\JsonWriter;
 use Brunty\Cigar\Output;
 use Brunty\Cigar\ConfigParser;
 use Brunty\Cigar\QuietWriter;
-use Brunty\Cigar\Result;
+use Brunty\Cigar\SystemTimer;
+
+$timer = new SystemTimer();
+$start = $timer->start();
 
 $inputOptions = new InputOptions([
     'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message'),
     'version' => InputOption::create('version', '', InputOption::VALUE_NONE, 'Print the version of Cigar'),
-    'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED, 'Use the specified config file instead of the default cigar.json file'),
+    'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED,
+        'Use the specified config file instead of the default cigar.json file'),
     'quiet' => InputOption::create('quiet', 'q', InputOption::VALUE_NONE, 'Do not output any message'),
     'insecure' => InputOption::create('insecure', 'i', InputOption::VALUE_NONE, 'Allow invalid SSL certificates'),
-    'auth' => InputOption::create('auth', 'a', InputOption::VALUE_REQUIRED, 'Authorization header "<type> <credentials>"'),
-    'url' => InputOption::create('url', 'u', InputOption::VALUE_REQUIRED, 'Base URL for checks, e.g. https://example.org/'),
-    'header' => InputOption::create('header', 'h', InputOption::VALUE_REQUIRED, 'Custom header "<name>: <value>", can be passed multiple times to send multiple headers'),
+    'auth' => InputOption::create('auth', 'a', InputOption::VALUE_REQUIRED,
+        'Authorization header "<type> <credentials>"'),
+    'url' => InputOption::create('url', 'u', InputOption::VALUE_REQUIRED,
+        'Base URL for checks, e.g. https://example.org/'),
+    'header' => InputOption::create('header', 'h', InputOption::VALUE_REQUIRED,
+        'Custom header "<name>: <value>", can be passed multiple times to send multiple headers'),
     'timeout' => InputOption::create('timeout', 't', InputOption::VALUE_REQUIRED, 'Timeout in seconds'),
-    'connect-timeout' => InputOption::create('connect-timeout', 'c', InputOption::VALUE_REQUIRED, 'Connect Timeout in seconds'),
+    'connect-timeout' => InputOption::create('connect-timeout', 'c', InputOption::VALUE_REQUIRED,
+        'Connect Timeout in seconds'),
     'json' => InputOption::create('json', 'j', InputOption::VALUE_NONE, 'Output JSON'),
 ]);
 
@@ -44,33 +51,31 @@ $input = new Input($inputOptions, $submittedInput);
 $output = new Output(
     $input->getOption('quiet')
         ? new QuietWriter()
-        : ($input->getOption('json') ? new JsonWriter() : new EchoWriter())
+        : ($input->getOption('json') ? new JsonWriter() : new EchoWriter()),
+    $timer,
 );
 
-$inputOptionsHelpOutput = $output->helpOutputForInputOptions($inputOptions);
-
 if ($input->getOption('help')) {
-    $content = <<<HELP
+    echo <<<HELP
 
 \033[33mUsage:\033[0m
   cigar [options]
 
-{$inputOptionsHelpOutput}
+{$output->helpOutputForInputOptions($inputOptions)}
 
 Created by Matt Brunt
 E: matt@brunty.me
-T: twitter.com/Brunty
 M: brunty.social/@brunty
+T: twitter.com/Brunty
 G: github.com/brunty/cigar
 
 HELP;
-    echo $content;
     exit(0);
 }
 
 if ($input->getOption('version')) {
     $version = CIGAR_VERSION;
-    $content = <<<VERSION
+    echo <<<VERSION
   ____ ___ ____    _    ____
  / ___|_ _/ ___|  / \  |  _ \
 | |    | | |  _  / _ \ | |_) |
@@ -85,7 +90,6 @@ For additional help use \033[36m--help\033[0m
 
 
 VERSION;
-    echo $content;
     exit(0);
 }
 
@@ -97,28 +101,24 @@ if ( ! file_exists($configFile)) {
     exit(1);
 }
 
-$secure = ! $input->getOption('insecure');
-$authorization = $input->getOption('auth') ?: null;
-$headers = $input->getOption('header') ?: [];
-$connectTimeout = $input->getOption('connect-timeout') ?: null;
-$timeout = $input->getOption('timeout') ?: null;
-
 try {
-    $domains = (new ConfigParser($baseUrl, $connectTimeout, $timeout))->parse($configFile);
+    $configParser = new ConfigParser(
+        $baseUrl,
+        $input->getOption('connect-timeout') ?: null,
+        $input->getOption('timeout') ?: null,
+    );
+    $domains = $configParser->parse($configFile);
 } catch (Throwable $e) {
     $output->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
     exit(1);
 }
+$checker = new AsyncChecker(
+    ! $input->getOption('insecure'),
+    $input->getOption('auth') ?: null,
+    $input->getOption('header') ?: [],
+);
+$results = $checker->check($domains);
 
-$results = (new AsyncChecker($secure, $authorization, $headers))->check($domains);
-$passedResults = array_filter($results, function (Result $result) {
-    return $result->hasPassed();
-});
+$output->outputResults($results, $start);
 
-$output->outputResults($passedResults, $results, $start);
-
-if (count($passedResults) !== count($results)) {
-    exit(1);
-}
-
-exit(0);
+exit($results->hasPassed() ? 0 : 1);

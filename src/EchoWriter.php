@@ -17,22 +17,17 @@ class EchoWriter implements Writer
         echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
     }
 
-    public function writeResults(
-        int $numberOfPassedResults,
-        int $numberOfResults,
-        bool $passed,
-        float $timeDiff,
-        Result ...$results
-    ): void {
+    public function writeResults(Results $results, float $timeDiff): void
+    {
         ob_start();
 
-        foreach ($results as $result) {
+        foreach ($results->results as $result) {
             $this->writeLine($result);
         }
 
         ob_end_flush();
 
-        $this->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
+        $this->writeStats($results, $timeDiff);
     }
 
     private function writeLine(Result $result): void
@@ -55,20 +50,20 @@ class EchoWriter implements Writer
         );
     }
 
-    private function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff): void
+    private function writeStats(Results $results, float $timeDiff): void
     {
         $color = self::CONSOLE_GREEN;
         $reset = self::CONSOLE_RESET;
 
-        if (!$passed) {
+        if ($results->hasPassed() === false) {
             $color = self::CONSOLE_RED;
         }
 
         echo sprintf(
             PHP_EOL . '[%s%s/%s%s] passed in %ss' . PHP_EOL . PHP_EOL,
             $color,
-            $numberOfPassedResults,
-            $numberOfResults,
+            $results->numberOfPassedResults(),
+            $results->numberOfTotalResults(),
             $reset,
             $timeDiff
         );
@@ -80,7 +75,7 @@ class EchoWriter implements Writer
         $colour = self::CONSOLE_GREEN;
         $status = self::SYMBOL_PASSED;
 
-        if (!$passed) {
+        if ($passed === false) {
             $colour = self::CONSOLE_RED;
             $status = self::SYMBOL_FAILED;
         }

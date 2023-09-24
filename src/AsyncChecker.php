@@ -15,10 +15,8 @@ class AsyncChecker
 
     /**
      * @param Url[] $urlsToCheck
-     *
-     * @return Result[]
      */
-    public function check(array $urlsToCheck): array
+    public function check(array $urlsToCheck): Results
     {
         $mh = curl_multi_init();
         $channels = [];
@@ -60,7 +58,7 @@ class AsyncChecker
             curl_multi_exec($mh, $running);
         } while ($running);
 
-        $return = [];
+        $results = [];
         foreach ($urlsToCheck as $urlToCheck) {
             $key = $urlToCheck->url;
             $channel = $channels[$key];
@@ -68,12 +66,12 @@ class AsyncChecker
             $content = curl_multi_getcontent($channel);
             $contentType = curl_getinfo($channel, CURLINFO_CONTENT_TYPE) ?? null;
 
-            $return[] = new Result($urlToCheck, $code, $content, (string) $contentType);
+            $results[] = new Result($urlToCheck, $code, $content, (string) $contentType);
             curl_multi_remove_handle($mh, $channel);
         }
 
         curl_multi_close($mh);
 
-        return $return;
+        return new Results(...$results);
     }
 }
