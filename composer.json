@@ -41,11 +41,11 @@
     "test": "XDEBUG_MODE=coverage php vendor/bin/phpunit --color=always --coverage-html=./build/coverage",
     "test:mutation": "vendor/bin/infection",
     "psalm": "vendor/bin/psalm --config=psalm.xml --show-info=true --no-cache",
-    "phpcs": "vendor/bin/phpcs -p --colors --standard=phpcs.xml",
-    "phpcs:fix": "vendor/bin/phpcbf -p --colors --standard=phpcs.xml",
+    "cs": "vendor/bin/phpcs -p --colors --standard=phpcs.xml",
+    "cs:fix": "vendor/bin/phpcbf -p --colors --standard=phpcs.xml",
     "check": [
       "@psalm",
-      "@phpcs"
+      "@cs"
     ]
   },
   "config": {
