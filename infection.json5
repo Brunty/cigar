@@ -1,0 +1,24 @@
+{
+  "source": {
+    "directories": [
+      "src"
+    ],
+    "excludes": [
+      "tests",
+      "spec",
+    ]
+  },
+  "timeout": 10,
+  "logs": {
+    "text": "build/infection/infection.log",
+    "html": "build/infection/infection.html",
+    "summary": "build/infection/summary.log",
+    "json": "build/infection/infection-log.json",
+    "perMutator": "build/infection/per-mutator.md",
+    "github": true,
+  },
+  "testFramework":"phpunit",
+//  "bootstrap":"./infection-bootstrap.php",
+//  "initialTestsPhpOptions": "-d zend_extension=xdebug.so",
+//  "testFrameworkOptions": "--filter=Unit"
+}

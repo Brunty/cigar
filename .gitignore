@@ -6,3 +6,4 @@ cigar.json
 coverage.xml
 clover.xml
 cache/
+build/

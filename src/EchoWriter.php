@@ -28,7 +28,6 @@ class EchoWriter implements Writer
 
         foreach ($results as $result) {
             $this->writeLine($result);
-            ob_flush();
         }
 
         ob_end_flush();
@@ -41,7 +40,7 @@ class EchoWriter implements Writer
         $contentType = '';
         [$colour, $status] = $this->getColourAndStatus($result);
         if ($result->url->contentType !== null) {
-            $contentType = sprintf(' [%s:%s]', $result->url->contentType, (string) $result->contentType);
+            $contentType = sprintf(' [%s:%s]', $result->url->contentType, $result->contentType);
         }
 
         echo sprintf(
@@ -52,7 +51,7 @@ class EchoWriter implements Writer
             $result->url->status,
             $result->statusCode,
             $contentType,
-            (string) $result->url->content
+            $result->url->content
         );
     }
 
