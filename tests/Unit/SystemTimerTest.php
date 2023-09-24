@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar\Tests\Unit;
 
 use Brunty\Cigar\SystemTimer;
