@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Brunty\Cigar\Tests\Functional;
+namespace Brunty\Cigar\Tests\Integration;
 
 use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\Url;

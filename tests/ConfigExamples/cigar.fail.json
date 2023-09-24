@@ -1,0 +1,32 @@
+[
+    {
+        "url": "http://httpbin.org/status/418",
+        "status": 418,
+        "content": "teapot"
+    },
+    {
+        "url": "http://httpbin.org/status/200",
+        "status": 200,
+        "content-type": "text/html"
+    },
+    {
+        "url": "http://httpbin.org/status/304",
+        "status": 304
+    },
+    {
+        "url": "http://httpbin.org/status/500",
+        "status": 501
+    },
+    {
+        "url": "http://httpbin.org/delay/3",
+        "status": 200,
+        "request-timeout": 1,
+        "response-timeout": 1
+    },
+    {
+        "url": "http://httpbin.org/drip?duration=3",
+        "status": 200,
+        "request-timeout": 1,
+        "response-timeout": 1
+    }
+]
