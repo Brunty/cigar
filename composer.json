@@ -27,7 +27,6 @@
   "require-dev": {
     "mikey179/vfsstream": "^1.6",
     "php-coveralls/php-coveralls": "^2.6",
-    "kahlan/kahlan": "^5.2",
     "symfony/process": "^6.3",
     "vimeo/psalm": "^5.15",
     "squizlabs/php_codesniffer": "^3.7",
