@@ -18,4 +18,19 @@
     "github": true,
   },
   "testFramework":"phpunit",
+  "mutators": {
+    "@default": true,
+    "DecrementInteger": {
+      "ignore": [
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::38",
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::39",
+      ]
+    },
+    "GreaterThan": {
+      "ignore": [
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::51",
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::55",
+      ]
+    }
+  }
 }

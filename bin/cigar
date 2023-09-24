@@ -61,7 +61,7 @@ if ($input->getOption('help')) {
 \033[33mUsage:\033[0m
   cigar [options]
 
-{$output->helpOutputForInputOptions($inputOptions)}
+{$output->generateHelpOutputForOptions($inputOptions)}
 
 Created by Matt Brunt
 E: matt@brunty.me

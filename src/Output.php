@@ -24,7 +24,7 @@ class Output
         $this->writer->writeResults($results, $timeDiff);
     }
 
-    public function helpOutputForInputOptions(InputOptions $inputOptions): string
+    public function generateHelpOutputForOptions(InputOptions $inputOptions): string
     {
         $optionStartSequence = "\033[32m";
         $optionEndSequence = "\033[0m";
@@ -37,11 +37,11 @@ class Output
 
         $longestShortCodeLength = 0;
         $longestLongCodeLength = 0;
-        $valuePlaceholderLength = mb_strlen(self::VALUE_PLACEHOLDER);
+        $valuePlaceholderLength = strlen(self::VALUE_PLACEHOLDER);
 
         foreach ($inputOptions->options as $option) {
             $shortCodeLength = 3; // at it's shortest it is "-c "
-            $longCodeLength = mb_strlen($option->longCode) + 3; // +3 is for double dash before & the space or = after
+            $longCodeLength = strlen($option->longCode) + 3; // +3 is for double dash before & the space or = after
 
             if ($option->valueIsRequired()) {
                 $shortCodeLength += $valuePlaceholderLength;
@@ -64,7 +64,6 @@ class Output
             $shortCode = str_pad($shortCode, $longestShortCodeLength);
             $longCode = str_pad($longCode, $longestLongCodeLength);
 
-
             $output .= sprintf(
                 '  %s%s  %s%s  %s' . PHP_EOL,
                 $optionStartSequence,
@@ -80,11 +79,11 @@ class Output
 
     private function getShortCodeOutput(InputOption $option): string
     {
-        $shortCode = '';
-
-        if ($option->shortCode !== '') {
-            $shortCode = "-$option->shortCode";
+        if ($option->shortCode === '') {
+            return '';
         }
+
+        $shortCode = "-$option->shortCode";
 
         if ($option->valueIsRequired()) {
             $shortCode = "-$option->shortCode " . self::VALUE_PLACEHOLDER;
