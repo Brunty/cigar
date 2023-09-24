@@ -6,7 +6,7 @@ namespace Brunty\Cigar;
 
 use ParseError;
 
-class Parser
+class ConfigParser
 {
     private string $baseUrl;
 

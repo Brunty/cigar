@@ -18,7 +18,7 @@ use Brunty\Cigar\Input;
 use Brunty\Cigar\InputOption;
 use Brunty\Cigar\JsonWriter;
 use Brunty\Cigar\Output;
-use Brunty\Cigar\Parser;
+use Brunty\Cigar\ConfigParser;
 use Brunty\Cigar\QuietWriter;
 use Brunty\Cigar\Result;
 
@@ -100,7 +100,7 @@ $connectTimeout = $input->getOption('connect-timeout') ?: null;
 $timeout = $input->getOption('timeout') ?: null;
 
 try {
-    $domains = (new Parser($baseUrl, $connectTimeout, $timeout))->parse($configFile);
+    $domains = (new ConfigParser($baseUrl, $connectTimeout, $timeout))->parse($configFile);
 } catch (Throwable $e) {
     $output->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
     exit(1);

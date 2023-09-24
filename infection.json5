@@ -18,7 +18,4 @@
     "github": true,
   },
   "testFramework":"phpunit",
-//  "bootstrap":"./infection-bootstrap.php",
-//  "initialTestsPhpOptions": "-d zend_extension=xdebug.so",
-//  "testFrameworkOptions": "--filter=Unit"
 }

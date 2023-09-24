@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Brunty\Cigar\Parser;
+use Brunty\Cigar\ConfigParser;
 use Brunty\Cigar\Url;
 use org\bovigo\vfs\vfsStream;
 
-describe('Parser', function (): void {
+describe('ConfigParser', function (): void {
     it('parses a file that is correctly formatted', function (): void {
         $structure = [
             'cigar.json' => '[
@@ -31,7 +31,7 @@ describe('Parser', function (): void {
         ];
         vfsStream::setup('root', null, $structure);
 
-        $results = (new Parser())->parse('vfs://root/cigar.json');
+        $results = (new ConfigParser())->parse('vfs://root/cigar.json');
 
         $expected = [
             new Url('http://httpbin.org/status/418', 418),
@@ -49,7 +49,7 @@ describe('Parser', function (): void {
         vfsStream::setup('root', null, $structure);
 
         $fn = function (): void {
-            (new Parser())->parse('vfs://root/cigar.json');
+            (new ConfigParser())->parse('vfs://root/cigar.json');
         };
 
         expect($fn)->toThrow(new ParseError('Could not parse vfs://root/cigar.json'));
@@ -76,7 +76,7 @@ describe('Parser', function (): void {
         ];
         vfsStream::setup('root', null, $structure);
 
-        $results = (new Parser('http://httpbin.org'))->parse('vfs://root/cigar.json');
+        $results = (new ConfigParser('http://httpbin.org'))->parse('vfs://root/cigar.json');
 
         $expected = [
             new Url('http://httpbin.org/status/418', 418),
@@ -102,7 +102,7 @@ describe('Parser', function (): void {
 
 
         $fn = function (): void {
-            (new Parser())->parse('vfs://root/cigar.json');
+            (new ConfigParser())->parse('vfs://root/cigar.json');
         };
 
         expect($fn)->toThrow(new ParseError('Could not parse URL: http://:80'));
