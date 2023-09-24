@@ -4,8 +4,8 @@
       "src"
     ],
     "excludes": [
+      "AsyncChecker.php",
       "tests",
-      "spec",
     ]
   },
   "timeout": 10,
@@ -18,6 +18,7 @@
     "github": true,
   },
   "testFramework":"phpunit",
+  "testFrameworkOptions": "--testsuite=unit",
   "mutators": {
     "@default": true,
     "DecrementInteger": {
