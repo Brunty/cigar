@@ -13,6 +13,7 @@ foreach (['/../../..', '/../..', '/../vendor', '/vendor'] as $autoloadFileDirect
 
 use Brunty\Cigar\AsyncChecker;
 use Brunty\Cigar\EchoWriter;
+use Brunty\Cigar\ExitCode;
 use Brunty\Cigar\Input;
 use Brunty\Cigar\InputOption;
 use Brunty\Cigar\InputOptions;
@@ -44,9 +45,7 @@ $inputOptions = new InputOptions([
     'json' => InputOption::create('json', 'j', InputOption::VALUE_NONE, 'Output JSON'),
 ]);
 
-$submittedInput = getopt($inputOptions->shortCodes, $inputOptions->longCodes);
-
-$input = new Input($inputOptions, $submittedInput);
+$input = new Input($inputOptions, getopt($inputOptions->shortCodes, $inputOptions->longCodes));
 
 $output = new Output(
     $input->getOption('quiet')
@@ -70,7 +69,7 @@ T: twitter.com/Brunty
 G: github.com/brunty/cigar
 
 HELP;
-    exit(0);
+    exit(ExitCode::SUCCESS->value);
 }
 
 if ($input->getOption('version')) {
@@ -90,7 +89,7 @@ For additional help use \033[36m--help\033[0m
 
 
 VERSION;
-    exit(0);
+    exit(ExitCode::SUCCESS->value);
 }
 
 $configFile = $input->getOption('config') ?: 'cigar.json';
@@ -98,7 +97,7 @@ $baseUrl = $input->getOption('url') ?: null;
 
 if ( ! file_exists($configFile)) {
     $output->writeErrorLine('Could not find configuration file: ' . $configFile);
-    exit(1);
+    exit(ExitCode::FAILURE->value);
 }
 
 try {
@@ -110,16 +109,15 @@ try {
     $domains = $configParser->parse($configFile);
 } catch (Throwable $e) {
     $output->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
-    exit(1);
+    exit(ExitCode::FAILURE->value);
 }
 
-$checker = new AsyncChecker(
+$results = (new AsyncChecker(
     ! $input->getOption('insecure'),
     $input->getOption('auth') ?: null,
     $input->getOption('header') ?: [],
-);
-$results = $checker->check($domains);
+))->check($domains);
 
 $output->outputResults($results, $start);
 
-exit($results->hasPassed() ? 0 : 1);
+exit($results->hasPassed() ? ExitCode::SUCCESS->value : ExitCode::FAILURE->value);
