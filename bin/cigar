@@ -112,6 +112,7 @@ try {
     $output->writeErrorLine(sprintf('Unable to parse Cigar JSON file: %s', $e->getMessage()));
     exit(1);
 }
+
 $checker = new AsyncChecker(
     ! $input->getOption('insecure'),
     $input->getOption('auth') ?: null,
