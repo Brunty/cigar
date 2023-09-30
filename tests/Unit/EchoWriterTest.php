@@ -13,9 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Brunty\Cigar\EchoWriter
- * @uses \Brunty\Cigar\Results
- * @uses \Brunty\Cigar\Result
- * @uses \Brunty\Cigar\Url
+ * @uses   \Brunty\Cigar\ConsoleColours
+ * @uses   \Brunty\Cigar\Results
+ * @uses   \Brunty\Cigar\Result
+ * @uses   \Brunty\Cigar\Url
  */
 class EchoWriterTest extends TestCase
 {
@@ -30,7 +31,7 @@ class EchoWriterTest extends TestCase
     public function it_writes_an_error_line(): void
     {
         $expected = <<<CONTENT
-\033[31merror\033[0m
+\e[31merror\e[0m
 
 CONTENT;
         ob_start();
@@ -51,11 +52,11 @@ CONTENT;
         );
 
         $expected = <<<CONTENT
-\033[31m✘ url1 [201:200] [t:t] c\033[0m
-\033[32m✓ url2 [200:200] [t:t] c\033[0m
-\033[32m✓ url3 [200:200] \033[0m
+\e[31m✘ url1 [201:200] [t:t] c\e[0m
+\e[32m✓ url2 [200:200] [t:t] c\e[0m
+\e[32m✓ url3 [200:200] \e[0m
 
-[\033[31m2/3\033[0m] passed in 0.5s
+[\e[31m2/3\e[0m] passed in 0.5s
 
 
 CONTENT;

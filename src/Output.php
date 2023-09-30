@@ -26,13 +26,13 @@ class Output
 
     public function generateHelpOutputForOptions(InputOptions $inputOptions): string
     {
-        $optionStartSequence = "\033[32m";
-        $optionEndSequence = "\033[0m";
+        $consoleGreen = ConsoleColours::green();
+        $consoleReset = ConsoleColours::reset();
 
         $output = '';
 
         if ($inputOptions->options !== []) {
-            $output = "\033[33mOptions:\033[0m" . PHP_EOL;
+            $output = ConsoleColours::yellow() . 'Options:' . $consoleReset . PHP_EOL;
         }
 
         $longestShortCodeLength = 0;
@@ -66,10 +66,10 @@ class Output
 
             $output .= sprintf(
                 '  %s%s  %s%s  %s' . PHP_EOL,
-                $optionStartSequence,
+                $consoleGreen,
                 $shortCode,
                 $longCode,
-                $optionEndSequence,
+                $consoleReset,
                 $option->description
             );
         }

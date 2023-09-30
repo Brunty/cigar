@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Brunty\Cigar\Output
+ * @uses   \Brunty\Cigar\ConsoleColours
  * @uses   \Brunty\Cigar\SystemTimer
  * @uses   \Brunty\Cigar\InputOptions
  * @uses   \Brunty\Cigar\InputOption
@@ -102,11 +103,11 @@ class OutputTest extends TestCase
         $helpText = $output->generateHelpOutputForOptions($inputOptions);
 
         $expectedHelpText = <<<HELP
-\033[33mOptions:\033[0m
-  \033[32m          --help        \033[0m  Show the help message
-  \033[32m-v        --version     \033[0m  Print the version of Cigar
-  \033[32m-f VALUE  --config=VALUE\033[0m  Use the specified config
-  \033[32m          --url=VALUE   \033[0m  Something with a URL
+\e[33mOptions:\e[0m
+  \e[32m          --help        \e[0m  Show the help message
+  \e[32m-v        --version     \e[0m  Print the version of Cigar
+  \e[32m-f VALUE  --config=VALUE\e[0m  Use the specified config
+  \e[32m          --url=VALUE   \e[0m  Something with a URL
 
 HELP;
 
