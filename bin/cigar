@@ -68,10 +68,10 @@ if ($input->getOption('help')) {
 {$output->generateHelpOutputForOptions($inputOptions)}
 
 Created by Matt Brunt
-E: matt@brunty.me
-M: brunty.social/@brunty
-T: twitter.com/Brunty
-G: github.com/brunty/cigar
+{$consoleCyan}E:{$consoleReset} matt@brunty.me
+{$consoleCyan}M:{$consoleReset} brunty.social/@brunty
+{$consoleCyan}T:{$consoleReset} twitter.com/Brunty
+{$consoleCyan}G:{$consoleReset} github.com/brunty/cigar
 
 HELP;
     exit(ExitCode::SUCCESS->value);
