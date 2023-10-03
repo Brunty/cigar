@@ -18,14 +18,10 @@ use org\bovigo\vfs\vfsStream;
 class ConfigParserTest extends TestCase
 {
     #[Test]
-    public function it_parses_a_correctly_formatted_config_file(): void
+    public function it_parses_a_correctly_formatted_config_file_and_casts_values(): void
     {
         $structure = [
             'cigar.json' => '[
-  {
-    "url": "http://httpbin.org/status/418",
-    "status": 418
-  },
   {
     "url": "http://httpbin.org/status/200",
     "status": 200
@@ -37,6 +33,14 @@ class ConfigParserTest extends TestCase
     "content-type": "kitchen/teapot",
     "connect-timeout": 1,
     "timeout": 2
+  },
+  {
+    "url": "http://httpbin.org/status/200",
+    "status": 200,
+    "content": 1,
+    "content-type": 2,
+    "connect-timeout": "3",
+    "timeout": "4"
   }
 ]
 ',
@@ -46,9 +50,9 @@ class ConfigParserTest extends TestCase
         $results = (new ConfigParser())->parse('vfs://root/cigar.json');
 
         $expected = [
-            new Url('http://httpbin.org/status/418', 418),
             new Url('http://httpbin.org/status/200', 200),
             new Url('http://httpbin.org/status/418', 418, 'teapot', 'kitchen/teapot', 1, 2),
+            new Url('http://httpbin.org/status/200', 200, '1', '2', 3, 4),
         ];
 
         $this->assertEquals($expected, $results);
@@ -65,7 +69,7 @@ class ConfigParserTest extends TestCase
   },
   {
     "url": "status/200",
-    "status": 200
+    "status": "200"
   },
   {
     "url": "http://httpbin.org/status/418",

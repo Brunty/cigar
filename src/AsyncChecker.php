@@ -64,9 +64,9 @@ class AsyncChecker
             $channel = $channels[$key];
             $code = (int) curl_getinfo($channel, CURLINFO_HTTP_CODE);
             $content = curl_multi_getcontent($channel);
-            $contentType = curl_getinfo($channel, CURLINFO_CONTENT_TYPE) ?? null;
+            $contentType = (string) curl_getinfo($channel, CURLINFO_CONTENT_TYPE);
 
-            $results[] = new Result($urlToCheck, $code, $content, (string) $contentType);
+            $results[] = new Result($urlToCheck, $code, $content, $contentType);
             curl_multi_remove_handle($mh, $channel);
         }
 

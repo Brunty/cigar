@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Brunty\Cigar;
 
+use JsonException;
 use ParseError;
+use const JSON_THROW_ON_ERROR;
 
 class ConfigParser
 {
@@ -25,22 +27,22 @@ class ConfigParser
      */
     public function parse(string $filename): array
     {
-        $urls = json_decode(file_get_contents($filename), true);
-
-        if ($urls === null) {
+        try {
+            $urls = (array) json_decode(file_get_contents($filename), true, 3, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
             throw new ParseError('Could not parse ' . $filename);
         }
 
         return array_map(function (array $value) {
-            $url = $this->getUrl($value['url']);
+            $url = $this->getUrl((string) $value['url']);
 
             return new Url(
                 $url,
-                $value['status'],
-                $value['content'] ?? '',
-                $value['content-type'] ?? '',
-                $value['connect-timeout'] ?? $this->connectTimeout,
-                $value['timeout'] ?? $this->timeout
+                (int) $value['status'],
+                array_key_exists('content', $value) ? (string) $value['content'] : '',
+                array_key_exists('content-type', $value) ? (string) $value['content-type'] : '',
+                array_key_exists('connect-timeout', $value) ? (int) $value['connect-timeout'] : $this->connectTimeout,
+                array_key_exists('timeout', $value) ? (int) $value['timeout'] : $this->timeout,
             );
         }, $urls);
     }

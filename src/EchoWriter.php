@@ -66,6 +66,9 @@ class EchoWriter implements Writer
         );
     }
 
+    /**
+     * @return string[]
+     */
     private function getColourAndStatus(Result $result): array
     {
         $passed = $result->hasPassed();

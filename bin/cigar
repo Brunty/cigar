@@ -97,8 +97,8 @@ VERSION;
     exit(ExitCode::SUCCESS->value);
 }
 
-$configFile = $input->getOption('config') ?: 'cigar.json';
-$baseUrl = $input->getOption('url') ?: null;
+$configFile = (string) $input->getOption('config') ?: 'cigar.json';
+$baseUrl = (string) $input->getOption('url') ?: null;
 
 if ( ! file_exists($configFile)) {
     $output->writeErrorLine('Could not find configuration file: ' . $configFile);
@@ -108,8 +108,8 @@ if ( ! file_exists($configFile)) {
 try {
     $configParser = new ConfigParser(
         $baseUrl,
-        $input->getOption('connect-timeout') ?: null,
-        $input->getOption('timeout') ?: null,
+        (int) $input->getOption('connect-timeout') ?: null,
+        (int) $input->getOption('timeout') ?: null,
     );
     $domains = $configParser->parse($configFile);
 } catch (Throwable $e) {
@@ -119,8 +119,8 @@ try {
 
 $results = (new AsyncChecker(
     ! $input->getOption('insecure'),
-    $input->getOption('auth') ?: null,
-    $input->getOption('header') ?: [],
+    (string) $input->getOption('auth') ?: null,
+    (array) $input->getOption('header') ?: [],
 ))->check($domains);
 
 $output->outputResults($results, $start);

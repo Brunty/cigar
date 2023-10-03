@@ -21,10 +21,25 @@
   "testFrameworkOptions": "--testsuite=unit",
   "mutators": {
     "@default": true,
+    "CastArray": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::31",
+      ],
+    },
+    "CastString": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::37",
+      ],
+    },
     "DecrementInteger": {
       "ignore": [
         "Brunty\\Cigar\\Output::generateHelpOutputForOptions::38",
         "Brunty\\Cigar\\Output::generateHelpOutputForOptions::39",
+      ]
+    },
+    "IncrementInteger": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::31"
       ]
     },
     "GreaterThan": {
