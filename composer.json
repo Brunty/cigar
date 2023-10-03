@@ -6,7 +6,7 @@
   "authors": [
     {
       "name": "Matt Brunt",
-      "email": "matt@mfyu.co.uk"
+      "email": "matt@brunty.me"
     }
   ],
   "autoload": {
@@ -20,20 +20,39 @@
     }
   },
   "require": {
-    "php": ">=7.0",
+    "php": "8.1.*||8.2.*",
     "ext-curl": "*",
     "ext-json": "*"
   },
   "require-dev": {
-    "symfony/process": "^3.3",
     "mikey179/vfsstream": "^1.6",
-    "satooshi/php-coveralls": "^1.0",
-    "kahlan/kahlan": "^4.0"
+    "php-coveralls/php-coveralls": "^2.6",
+    "symfony/process": "^6.3",
+    "vimeo/psalm": "^5.15",
+    "squizlabs/php_codesniffer": "^3.7",
+    "slevomat/coding-standard": "^8.13",
+    "phpunit/phpunit": "^10.3",
+    "infection/infection": "^0.27.2"
   },
   "bin": [
     "bin/cigar"
   ],
   "scripts": {
-    "test": "vendor/bin/kahlan --reporter=verbose"
+    "test": "XDEBUG_MODE=coverage php vendor/bin/phpunit --color=always --coverage-html=./build/coverage",
+    "test:unit": "@test --testsuite=unit",
+    "test:mutation": "vendor/bin/infection",
+    "psalm": "vendor/bin/psalm --config=psalm.xml --show-info=true --no-cache",
+    "cs": "vendor/bin/phpcs -p --colors --standard=phpcs.xml",
+    "cs:fix": "vendor/bin/phpcbf -p --colors --standard=phpcs.xml",
+    "check": [
+      "@psalm",
+      "@cs"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "infection/extension-installer": true
+    }
   }
 }

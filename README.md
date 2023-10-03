@@ -1,6 +1,6 @@
 # Cigar
 
-[![Build Status](https://travis-ci.org/Brunty/cigar.svg?branch=master)](https://travis-ci.org/Brunty/cigar) [![Coverage Status](https://coveralls.io/repos/github/Brunty/cigar/badge.svg?branch=master)](https://coveralls.io/github/Brunty/cigar?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f/mini.png)](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f)
+[![Build Status](https://travis-ci.org/Brunty/cigar.svg?branch=main)](https://travis-ci.org/Brunty/cigar) [![Coverage Status](https://coveralls.io/repos/github/Brunty/cigar/badge.svg?branch=master)](https://coveralls.io/github/Brunty/cigar?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f/mini.png)](https://insight.sensiolabs.com/projects/d89a0b55-8ce6-4f85-a09c-7852d986225f)
 
 A smoke testing tool inspired by [symm/vape](https://github.com/symm/vape)
 
@@ -18,9 +18,17 @@ Pull via docker:
 
 `docker pull brunty/cigar`
 
+## Upgrading from V1 - Breaking Changes
+
+- `.cigar.json` default config file name is now just `cigar.json`
+- No longer testing against PHP 7.X and PHP 8.0 
+- Command line option changes:
+  - `-c` is now `-f` for config file
+  - `-s` is now `-c` for connect-timeout
+
 ## To use
 
-Create a `.cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
+Create a `cigar.json` file that contains an array of json objects specifying the `url`, `status`, (optional) `content`, and  (optional) `content-type` to check.
 
 ```
 [

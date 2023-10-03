@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ruleset
+        name="Magnetic Rock Coding Standard"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+
+    <!-- Exclude the lint command from all checks -->
+    <exclude-pattern>src/App/Command/TwigLintCommand.php</exclude-pattern>
+
+    <rule ref="PSR12">
+        <exclude name="PSR12.Files.OpenTag.NotAlone"/>
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock"/>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <exclude-pattern>src/Migrations</exclude-pattern>
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+
+    <!-- There must be single space after casts e.g. `(string) $foo` -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+
+    <!-- Arrays must use the short syntax -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <!-- Use single quotes, unless double quote usage is required for interpolation -->
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+
+    <!-- Require 1 line before and after function, except at the top and bottom -->
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0"/>
+            <property name="spacingAfterLast" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Require 1 line before and after property declaration, except at the top -->
+    <rule ref="Squiz.WhiteSpace.MemberVarSpacing">
+        <properties>
+            <property name="spacingBeforeFirst" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Start each file with `<?php declare(strict_types=1)` -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="spacesCountAroundEqualsSign" value="0"/>
+        </properties>
+    </rule>
+
+    <!--
+        If a class is used, it must be imported.
+        If a predefined constant or function is used, it must not begin with a backlash and must not be imported.
+        If a user-defined constant or function is used, it must be imported.
+    -->
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly"/>
+
+    <!-- There must be a blank line after a namespace line -->
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceSpacing"/>
+
+    <!-- Yoda-style comparison must not be used -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+
+    <!-- Assignments in conditions must not be used -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
+
+    <!-- Unused imports must be removed -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="1"/>
+        </properties>
+    </rule>
+
+    <!-- == and != must not be used -->
+    <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators"/>
+
+    <!-- There must be a trailing comma on multiline arrays -->
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+
+    <!-- There must be no blank lines after opening class brace or before closing class brace -->
+    <rule ref="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces">
+        <properties>
+            <property name="linesCountAfterOpeningBrace" value="0"/>
+            <property name="linesCountBeforeClosingBrace" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Imports must be sorted alphabetically -->
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+        <properties>
+            <property name="caseSensitive" value="1"/>
+        </properties>
+    </rule>
+
+    <!-- There must be no spaces before the return type colon, and one space after -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingAnyTypeHint"/>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint"/>
+        <!--
+        Inherited property $defaultTemplates does not have typehint, so can't be converted to a native type, and static
+        analysis tools complain about it not having type.
+        -->
+        <exclude-pattern>src/App/Validator/Rule/*Exception.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint"/>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <properties>
+            <property name="linesCountBeforeFirstContent" value="0"/>
+            <property name="linesCountAfterLastContent" value="0"/>
+            <property name="linesCountBetweenDescriptionAndAnnotations" value="1"/>
+            <property name="linesCountBetweenAnnotationsGroups" value="1"/>
+            <property name="annotationsGroups" type="array">
+                <element value="
+                    @test,
+                    @dataProvider,
+                    @When,
+                    @Given,
+                    @Then,
+                    @BeforeScenario,
+                    @AfterScenario,
+                    @Transform,
+                "/>
+                <element value="@param"/>
+                <element value="@return"/>
+                <element value="@throws"/>
+            </property>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Commenting.RequireOneLinePropertyDocComment"/>
+
+    <!-- Forbid useless comments -->
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+        <properties>
+            <property name="forbiddenCommentPatterns" type="array">
+                <element value="~Auto-generated Migration: Please modify to your needs!~"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Forbid unused variables -->
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <properties>
+            <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Forbid trailing spaces -->
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <!-- File intentionally declares constants and runs other code -->
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>app/bootstrap.php</exclude-pattern>
+        <exclude-pattern>cron/index.php</exclude-pattern>
+    </rule>
+
+    <!-- Debug helper functions are not allowed outside of development -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="var_dump" value="null"/>
+                <element key="die" value="null"/>
+                <element key="ray" value="null"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Tests are written in snake_case for readability -->
+    <!-- TODO: Find a rule that checks for snake case in tests -->
+    <rule ref="PSR1.Methods.CamelCapsMethodName">
+        <exclude-pattern>tests/integration/*</exclude-pattern>
+        <exclude-pattern>tests/functional/*</exclude-pattern>
+        <exclude-pattern>tests/integration/*</exclude-pattern>
+        <exclude-pattern>tests/unit/*</exclude-pattern>
+    </rule>
+
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="100"/>
+
+    <file>bin/cigar</file>
+    <file>src</file>
+    <file>tests</file>
+</ruleset>

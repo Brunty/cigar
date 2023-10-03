@@ -1,66 +1,82 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Brunty\Cigar;
 
-class EchoWriter implements WriterInterface
+class EchoWriter implements Writer
 {
-    const CONSOLE_GREEN = "\033[32m";
-    const CONSOLE_RED = "\033[31m";
-    const CONSOLE_RESET = "\033[0m";
+    private const SYMBOL_PASSED = '✓';
+    private const SYMBOL_FAILED = '✘';
 
-    const SYMBOL_PASSED = '✓';
-    const SYMBOL_FAILED = '✘';
-
-    public function writeErrorLine(string $message)
+    public function writeErrorLine(string $message): void
     {
-        echo self::CONSOLE_RED . $message . self::CONSOLE_RESET . PHP_EOL;
+        echo ConsoleColours::red() . $message . ConsoleColours::reset() . PHP_EOL;
     }
 
-    public function writeResults(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff, Result ...$results)
+    public function writeResults(Results $results, float $timeDiff): void
     {
         ob_start();
 
-        foreach ($results as $result) {
+        foreach ($results->results as $result) {
             $this->writeLine($result);
-            ob_flush();
         }
 
         ob_end_flush();
 
-        $this->writeStats($numberOfPassedResults, $numberOfResults, $passed, $timeDiff);
+        $this->writeStats($results, $timeDiff);
     }
 
-    private function writeLine(Result $result)
+    private function writeLine(Result $result): void
     {
         $contentType = '';
-        list ($colour, $status) = $this->getColourAndStatus($result);
-        if ($result->getUrl()->getContentType() !== null) {
-            $contentType = " [{$result->getUrl()->getContentType()}:{$result->getContentType()}]";
+        [$colour, $status] = $this->getColourAndStatus($result);
+        if ($result->url->contentType !== '') {
+            $contentType = sprintf(' [%s:%s]', $result->url->contentType, $result->contentType);
         }
 
-        echo "{$colour}{$status} {$result->getUrl()->getUrl()} [{$result->getUrl()->getStatus()}:{$result->getStatusCode()}]{$contentType} {$result->getUrl()->getContent()}" . self::CONSOLE_RESET . PHP_EOL;
+        echo sprintf(
+            '%s%s %s [%s:%s]%s %s' . ConsoleColours::reset() . PHP_EOL,
+            $colour,
+            $status,
+            $result->url->url,
+            $result->url->status,
+            $result->statusCode,
+            $contentType,
+            $result->url->content
+        );
     }
 
-    private function writeStats(int $numberOfPassedResults, int $numberOfResults, bool $passed, float $timeDiff)
+    private function writeStats(Results $results, float $timeDiff): void
     {
-        $color = self::CONSOLE_GREEN;
-        $reset = self::CONSOLE_RESET;
+        $color = ConsoleColours::green();
+        $reset = ConsoleColours::reset();
 
-        if ( ! $passed) {
-            $color = self::CONSOLE_RED;
+        if ($results->hasPassed() === false) {
+            $color = ConsoleColours::red();
         }
 
-        echo PHP_EOL . "[{$color}{$numberOfPassedResults}/{$numberOfResults}{$reset}] passed in {$timeDiff}s" . PHP_EOL . PHP_EOL;
+        echo sprintf(
+            PHP_EOL . '[%s%s/%s%s] passed in %ss' . PHP_EOL . PHP_EOL,
+            $color,
+            $results->numberOfPassedResults(),
+            $results->totalNumberOfResults(),
+            $reset,
+            $timeDiff
+        );
     }
 
+    /**
+     * @return string[]
+     */
     private function getColourAndStatus(Result $result): array
     {
         $passed = $result->hasPassed();
-        $colour = self::CONSOLE_GREEN;
+        $colour = ConsoleColours::green();
         $status = self::SYMBOL_PASSED;
 
-        if ( ! $passed) {
-            $colour = self::CONSOLE_RED;
+        if ($passed === false) {
+            $colour = ConsoleColours::red();
             $status = self::SYMBOL_FAILED;
         }
 

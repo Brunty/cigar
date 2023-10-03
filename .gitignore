@@ -1,6 +1,11 @@
 /vendor
 /composer.lock
+cigar.json
 .cigar.json
 .idea
 coverage.xml
 clover.xml
+cache/
+build/
+tests/ConfigExamples/cigar.json
+tests/ConfigExamples/alt.json

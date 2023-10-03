@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Brunty\Cigar\Tests\Unit;
+
+use Brunty\Cigar\InputOption;
+use Brunty\Cigar\InputOptions;
+use Brunty\Cigar\Output;
+use Brunty\Cigar\Results;
+use Brunty\Cigar\SystemTimer;
+use Brunty\Cigar\Timer;
+use Brunty\Cigar\Writer;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @covers \Brunty\Cigar\Output
+ * @uses   \Brunty\Cigar\ConsoleColours
+ * @uses   \Brunty\Cigar\SystemTimer
+ * @uses   \Brunty\Cigar\InputOptions
+ * @uses   \Brunty\Cigar\InputOption
+ * @uses   \Brunty\Cigar\Results
+ */
+class OutputTest extends TestCase
+{
+    #[Test]
+    public function it_outputs_an_error_line(): void
+    {
+        $writer = new class implements Writer {
+            public string $errorMessage = '';
+
+            public function writeErrorLine(string $message): void
+            {
+                $this->errorMessage .= $message;
+            }
+
+            public function writeResults(Results $results, float $timeDiff): void
+            {
+            }
+        };
+
+        $output = new Output($writer, new SystemTimer());
+        $output->writeErrorLine('message-here');
+
+        $this->assertSame('message-here', $writer->errorMessage);
+    }
+
+    #[Test]
+    public function it_outputs_results(): void
+    {
+        $writer = new class implements Writer {
+            public Results $results;
+
+            public float $timeDiff = 0;
+
+            public function writeErrorLine(string $message): void
+            {
+            }
+
+            public function writeResults(Results $results, float $timeDiff): void
+            {
+                $this->results = $results;
+                $this->timeDiff = $timeDiff;
+            }
+        };
+
+        $timer = new class implements Timer {
+            public function now(): float
+            {
+                return 2.63456;
+            }
+        };
+
+        $output = new Output($writer, $timer);
+        $results = new Results();
+        $output->outputResults($results, 0.5);
+
+        $this->assertSame(2.135, $writer->timeDiff);
+    }
+
+    #[Test]
+    public function it_generates_help_output(): void
+    {
+        $writer = new class implements Writer {
+            public function writeErrorLine(string $message): void
+            {
+            }
+
+            public function writeResults(Results $results, float $timeDiff): void
+            {
+            }
+        };
+
+        $output = new Output($writer, new SystemTimer());
+
+        $inputOptions = new InputOptions([
+            'help' => InputOption::create('help', '', InputOption::VALUE_NONE, 'Show the help message'),
+            'version' => InputOption::create('version', 'v', InputOption::VALUE_NONE, 'Print the version of Cigar'),
+            'config' => InputOption::create('config', 'f', InputOption::VALUE_REQUIRED, 'Use the specified config'),
+            'url' => InputOption::create('url', '', InputOption::VALUE_REQUIRED, 'Something with a URL'),
+        ]);
+        $helpText = $output->generateHelpOutputForOptions($inputOptions);
+
+        $expectedHelpText = <<<HELP
+\e[33mOptions:\e[0m
+  \e[32m          --help        \e[0m  Show the help message
+  \e[32m-v        --version     \e[0m  Print the version of Cigar
+  \e[32m-f VALUE  --config=VALUE\e[0m  Use the specified config
+  \e[32m          --url=VALUE   \e[0m  Something with a URL
+
+HELP;
+
+        $this->assertSame($expectedHelpText, $helpText);
+    }
+}

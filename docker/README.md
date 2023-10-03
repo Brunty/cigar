@@ -2,7 +2,7 @@
 
 Replace the versions as appropriate
 ```
-docker build . -t brunty/cigar:1.12.4 -f ./docker/1.12/Dockerfile
+docker build . -t brunty/cigar:2.0.0 -f ./docker/2.0/Dockerfile
 docker push brunty/cigar --all-tags
 ```
 

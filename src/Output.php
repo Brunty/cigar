@@ -1,0 +1,105 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Brunty\Cigar;
+
+class Output
+{
+    private const VALUE_PLACEHOLDER = 'VALUE';
+
+    public function __construct(private readonly Writer $writer, private readonly Timer $timer)
+    {
+    }
+
+    public function writeErrorLine(string $message): void
+    {
+        $this->writer->writeErrorLine($message);
+    }
+
+    public function outputResults(Results $results, float $startedAt): void
+    {
+        $timeDiff = round($this->timer->now() - $startedAt, 3);
+
+        $this->writer->writeResults($results, $timeDiff);
+    }
+
+    public function generateHelpOutputForOptions(InputOptions $inputOptions): string
+    {
+        $consoleGreen = ConsoleColours::green();
+        $consoleReset = ConsoleColours::reset();
+
+        $output = '';
+
+        if ($inputOptions->options !== []) {
+            $output = ConsoleColours::yellow() . 'Options:' . $consoleReset . PHP_EOL;
+        }
+
+        $longestShortCodeLength = 0;
+        $longestLongCodeLength = 0;
+        $valuePlaceholderLength = strlen(self::VALUE_PLACEHOLDER);
+
+        foreach ($inputOptions->options as $option) {
+            $shortCodeLength = 3; // at it's shortest it is "-c "
+            $longCodeLength = strlen($option->longCode) + 3; // +3 is for double dash before & the space or = after
+
+            if ($option->valueIsRequired()) {
+                $shortCodeLength += $valuePlaceholderLength;
+                $longCodeLength += $valuePlaceholderLength;
+            }
+
+            if ($shortCodeLength > $longestShortCodeLength) {
+                $longestShortCodeLength = $shortCodeLength;
+            }
+
+            if ($longCodeLength > $longestLongCodeLength) {
+                $longestLongCodeLength = $longCodeLength;
+            }
+        }
+
+        foreach ($inputOptions->options as $option) {
+            $shortCode = $this->getShortCodeOutput($option);
+            $longCode = $this->getLongCodeOutput($option);
+
+            $shortCode = str_pad($shortCode, $longestShortCodeLength);
+            $longCode = str_pad($longCode, $longestLongCodeLength);
+
+            $output .= sprintf(
+                '  %s%s  %s%s  %s' . PHP_EOL,
+                $consoleGreen,
+                $shortCode,
+                $longCode,
+                $consoleReset,
+                $option->description
+            );
+        }
+
+        return $output;
+    }
+
+    private function getShortCodeOutput(InputOption $option): string
+    {
+        if ($option->shortCode === '') {
+            return '';
+        }
+
+        $shortCode = "-$option->shortCode";
+
+        if ($option->valueIsRequired()) {
+            $shortCode = "-$option->shortCode " . self::VALUE_PLACEHOLDER;
+        }
+
+        return $shortCode;
+    }
+
+    private function getLongCodeOutput(InputOption $option): string
+    {
+        $longCode = "--$option->longCode";
+
+        if ($option->valueIsRequired()) {
+            $longCode = "--$option->longCode=" . self::VALUE_PLACEHOLDER;
+        }
+
+        return $longCode;
+    }
+}

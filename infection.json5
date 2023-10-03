@@ -1,0 +1,52 @@
+{
+  "source": {
+    "directories": [
+      "src"
+    ],
+    "excludes": [
+      "AsyncChecker.php",
+      "tests",
+    ]
+  },
+  "timeout": 10,
+  "logs": {
+    "text": "build/infection/infection.log",
+    "html": "build/infection/infection.html",
+    "summary": "build/infection/summary.log",
+    "json": "build/infection/infection-log.json",
+    "perMutator": "build/infection/per-mutator.md",
+    "github": true,
+  },
+  "testFramework":"phpunit",
+  "testFrameworkOptions": "--testsuite=unit",
+  "mutators": {
+    "@default": true,
+    "CastArray": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::31",
+      ],
+    },
+    "CastString": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::37",
+      ],
+    },
+    "DecrementInteger": {
+      "ignore": [
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::38",
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::39",
+      ]
+    },
+    "IncrementInteger": {
+      "ignore": [
+        "Brunty\\Cigar\\ConfigParser::parse::31"
+      ]
+    },
+    "GreaterThan": {
+      "ignore": [
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::51",
+        "Brunty\\Cigar\\Output::generateHelpOutputForOptions::55",
+      ]
+    }
+  }
+}
